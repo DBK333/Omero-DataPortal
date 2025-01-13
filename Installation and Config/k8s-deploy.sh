@@ -20,12 +20,22 @@ apt-get install -y containerd
 mkdir -p /etc/containerd
 containerd config default | tee /etc/containerd/config.toml
 
-# Update containerd configuration to use systemd cgroup driver
+# Update containerd configuration
 sed -i 's/SystemdCgroup = false/SystemdCgroup = true/' /etc/containerd/config.toml
+
+# Fix ttrpc configuration
+sed -i '/\[ttrpc\]/,/\[/ s/address = ""/address = "\/run\/containerd\/containerd.sock.ttrpc"/' /etc/containerd/config.toml
+sed -i '/\[ttrpc\]/,/\[/ s/uid = 0/uid = root/' /etc/containerd/config.toml
+sed -i '/\[ttrpc\]/,/\[/ s/gid = 0/gid = root/' /etc/containerd/config.toml
 
 # Restart and enable containerd
 systemctl restart containerd
 systemctl enable containerd
+
+# Unmask and enable Docker
+systemctl unmask docker.service
+systemctl enable docker
+systemctl start docker
 
 # Configure Docker daemon for Kubernetes
 mkdir -p /etc/docker
