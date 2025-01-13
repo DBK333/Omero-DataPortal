@@ -79,7 +79,7 @@ sudo ./k8s-deploy.sh
 1. Modify the `k8s-hostnames.yaml` file to specify the IP addresses of the worker and master nodes.
 2. Deploy Kubernetes on the master node:
    ```bash
-   sudo ./k8s-deploy.sh
+   sudo ./k8s-init-master.sh
    ```
 
 ---
