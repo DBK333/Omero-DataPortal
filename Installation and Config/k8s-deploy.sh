@@ -3,7 +3,7 @@ set -euo pipefail
 
 # Check if running with sudo/root
 if [[ $EUID -ne 0 ]]; then
-   echo "This script must be run with sudo or as root" 
+   echo "This script must be run with sudo or as root"
    exit 1
 fi
 
