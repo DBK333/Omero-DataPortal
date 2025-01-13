@@ -9,36 +9,52 @@ fi
 
 echo "Starting Kubernetes Node Configuration..."
 
+# Clean up any previous CNI configurations
+rm -rf /etc/cni/net.d/*
+
 # Verify required packages
-if ! command -v docker &> /dev/null || ! command -v kubelet &> /dev/null || ! command -v kubeadm &> /dev/null; then
-    echo "Error: Required packages (docker, kubelet, kubeadm) are not installed"
-    exit 1
+for pkg in docker kubelet kubeadm kubectl; do
+    if ! command -v $pkg &> /dev/null; then
+        echo "Error: Required package $pkg is not installed"
+        exit 1
+    fi
+done
+
+# Stop and disable firewalld if it exists
+if systemctl is-active --quiet firewalld; then
+    systemctl stop firewalld
+    systemctl disable firewalld
 fi
+
+# Configure containerd
+mkdir -p /etc/containerd
+containerd config default | tee /etc/containerd/config.toml >/dev/null
+# Update containerd config to use SystemdCgroup
+sed -i 's/SystemdCgroup = false/SystemdCgroup = true/' /etc/containerd/config.toml
+systemctl restart containerd
+systemctl enable containerd
 
 # Configure Docker daemon for Kubernetes
-if ! mkdir -p /etc/docker; then
-    echo "Error: Failed to create Docker directory"
-    exit 1
-fi
-
-sudo mkdir -p /etc/containerd
-sudo containerd config default | sudo tee /etc/containerd/config.toml
-sudo systemctl restart containerd
-
+mkdir -p /etc/docker
 cat > /etc/docker/daemon.json <<EOF
 {
   "exec-opts": ["native.cgroupdriver=systemd"],
   "log-driver": "json-file",
   "log-opts": {
-    "max-size": "100m"
+    "max-size": "100m",
+    "max-file": "3"
   },
-  "storage-driver": "overlay2"
+  "storage-driver": "overlay2",
+  "storage-opts": [
+    "overlay2.override_kernel_check=true"
+  ]
 }
 EOF
 
 # Restart Docker to apply configurations
 systemctl daemon-reload
 systemctl restart docker
+systemctl enable docker
 
 if ! systemctl is-active --quiet docker; then
     echo "Error: Docker service failed to restart"
@@ -49,8 +65,9 @@ fi
 swapoff -a
 sed -i '/swap/d' /etc/fstab
 
-if grep -q "[[:space:]]swap[[:space:]]" /etc/fstab; then
-    echo "Error: Failed to remove swap entries from /etc/fstab"
+# Verify swap is disabled
+if swapon --show; then
+    echo "Error: Failed to disable swap"
     exit 1
 fi
 
@@ -60,13 +77,17 @@ overlay
 br_netfilter
 EOF
 
-if ! modprobe overlay || ! modprobe br_netfilter; then
+modprobe overlay
+modprobe br_netfilter
+
+# Verify modules are loaded
+if ! lsmod | grep -q "^overlay" || ! lsmod | grep -q "^br_netfilter"; then
     echo "Error: Failed to load required kernel modules"
     exit 1
 fi
 
 # Configure sysctl parameters for Kubernetes
-cat > /etc/sysctl.d/kubernetes.conf <<EOF
+cat > /etc/sysctl.d/k8s.conf <<EOF
 net.bridge.bridge-nf-call-ip6tables = 1
 net.bridge.bridge-nf-call-iptables = 1
 net.ipv4.ip_forward = 1
@@ -77,8 +98,12 @@ sysctl --system
 # Hold Kubernetes packages to prevent unintended upgrades
 apt-mark hold kubelet kubeadm kubectl
 
-# Enable kubelet service
-systemctl enable --now kubelet
+# Reset any existing kubeadm configuration
+kubeadm reset -f || true
+
+# Enable and start kubelet service
+systemctl enable kubelet
+systemctl start kubelet
 
 if ! systemctl is-active --quiet kubelet; then
     echo "Error: Kubelet service failed to start"
