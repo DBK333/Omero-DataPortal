@@ -28,11 +28,9 @@ chown "$(id -u ${SUDO_USER}):$(id -g ${SUDO_USER})" "${USER_HOME}/.kube/config"
 
 # Use the cluster's admin kubeconfig to apply resources
 # (explicit --kubeconfig to avoid localhost:8080 error)
-kubectl --kubeconfig /etc/kubernetes/admin.conf apply \
-  -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
-
+kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
 # Remove control-plane taint to allow pods on master node (optional)
-kubectl --kubeconfig /etc/kubernetes/admin.conf taint nodes --all node-role.kubernetes.io/control-plane- || true
+kubectl taint nodes --all node-role.kubernetes.io/control-plane-
 
 echo "Master Node Initialization Complete!"
 echo "Use the generated 'kubeadm join' command to join workers."
