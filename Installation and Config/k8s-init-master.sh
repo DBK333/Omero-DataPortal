@@ -3,7 +3,7 @@ set -euo pipefail
 
 # Check if running with sudo/root
 if [[ $EUID -ne 0 ]]; then
-   echo "This script must be run with sudo or as root"
+   echo "This script must be run with sudo or as root" 
    exit 1
 fi
 
@@ -26,12 +26,17 @@ mkdir -p "${USER_HOME}/.kube"
 cp -i /etc/kubernetes/admin.conf "${USER_HOME}/.kube/config"
 chown "$(id -u ${SUDO_USER}):$(id -g ${SUDO_USER})" "${USER_HOME}/.kube/config"
 
-# Apply Flannel network plugin
-kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
+# Use the cluster's admin kubeconfig to apply resources
+# (explicit --kubeconfig to avoid localhost:8080 error)
+kubectl --kubeconfig /etc/kubernetes/admin.conf apply \
+  -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
 
 # Remove control-plane taint to allow pods on master node (optional)
-kubectl taint nodes --all node-role.kubernetes.io/control-plane- || true
+kubectl --kubeconfig /etc/kubernetes/admin.conf taint nodes --all node-role.kubernetes.io/control-plane- || true
 
 echo "Master Node Initialization Complete!"
 echo "Use the generated 'kubeadm join' command to join workers."
-echo "To view cluster status, run: kubectl get nodes"
+echo "To view cluster status, run either:"
+echo "  export KUBECONFIG=/etc/kubernetes/admin.conf && kubectl get nodes"
+echo "OR"
+echo "  kubectl --kubeconfig /etc/kubernetes/admin.conf get nodes"
