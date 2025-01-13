@@ -1,0 +1,53 @@
+# File: Chart.yaml
+apiVersion: v2
+name: dev-environment
+description: A Helm chart for setting up development environment
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+
+---
+# File: values.yaml
+global:
+  environment: development
+
+docker:
+  enabled: true
+  version: latest
+
+kubectl:
+  enabled: true
+  version: stable
+
+minikube:
+  enabled: true
+  version: latest
+  memory: 2048
+  cpus: 2
+  driver: docker
+
+---
+# File: templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-config
+data:
+  environment: {{ .Values.global.environment }}
+  docker_version: {{ .Values.docker.version }}
+  kubectl_version: {{ .Values.kubectl.version }}
+  minikube_version: {{ .Values.minikube.version }}
+
+---
+# File: templates/NOTES.txt
+Development Environment Setup Complete!
+
+Your environment has been configured with:
+- Docker {{ .Values.docker.version }}
+- kubectl {{ .Values.kubectl.version }}
+- Minikube {{ .Values.minikube.version }}
+
+To verify the installation:
+1. Run: kubectl version
+2. Run: docker --version
+3. Run: minikube status
