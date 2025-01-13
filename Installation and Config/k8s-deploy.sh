@@ -21,6 +21,9 @@ if ! mkdir -p /etc/docker; then
     exit 1
 fi
 
+sudo mkdir -p /etc/containerd
+sudo containerd config default | sudo tee /etc/containerd/config.toml
+
 cat > /etc/docker/daemon.json <<EOF
 {
   "exec-opts": ["native.cgroupdriver=systemd"],
