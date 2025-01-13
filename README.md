@@ -55,12 +55,9 @@ Please run: 'exec su -l ubuntu' and then run this script again.
    ```bash
    ssh -i ~/Desktop/OmeroServer1.pem ubuntu@115.146.85.71
    ```
-3. Navigate back to the installation directory:
+3. Navigate back to the installation directory and rerun the installation script:
    ```bash
    cd Omero-DataPortal/Installation\ and\ Config/
-   ```
-4. Rerun the installation script:
-   ```bash
    ./install-script.sh
    ```
 
@@ -77,6 +74,9 @@ sudo ./k8s-deploy.sh
 ## Setting Up the Master Node
 
 1. Modify the `k8s-hostnames.yaml` file to specify the IP addresses of the worker and master nodes.
+   ```bash
+   nano k8s-hostnames.yaml 
+   ```
 2. Deploy Kubernetes on the master node:
    ```bash
    sudo ./k8s-init-master.sh
