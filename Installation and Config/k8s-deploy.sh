@@ -9,6 +9,24 @@ fi
 
 echo "Starting Kubernetes Node Configuration..."
 
+# Remove any old versions of containerd
+apt-get remove -y containerd containerd.io
+
+# Install containerd
+apt-get update
+apt-get install -y containerd
+
+# Create default containerd configuration
+mkdir -p /etc/containerd
+containerd config default | tee /etc/containerd/config.toml
+
+# Update containerd configuration to use systemd cgroup driver
+sed -i 's/SystemdCgroup = false/SystemdCgroup = true/' /etc/containerd/config.toml
+
+# Restart and enable containerd
+systemctl restart containerd
+systemctl enable containerd
+
 # Configure Docker daemon for Kubernetes
 mkdir -p /etc/docker
 cat > /etc/docker/daemon.json <<EOF
@@ -47,6 +65,9 @@ net.ipv4.ip_forward = 1
 EOF
 
 sysctl --system
+
+# Reset any previous Kubernetes configuration (if any)
+kubeadm reset -f
 
 # Hold Kubernetes packages to prevent unintended upgrades
 apt-mark hold kubelet kubeadm kubectl
