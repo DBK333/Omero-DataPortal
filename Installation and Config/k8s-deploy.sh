@@ -9,62 +9,18 @@ fi
 
 echo "Starting Kubernetes Node Configuration..."
 
-# Load required Kubernetes modules first
-cat > /etc/modules-load.d/k8s.conf <<EOF
-overlay
-br_netfilter
-EOF
+# Verify required packages
+if ! command -v docker &> /dev/null || ! command -v kubelet &> /dev/null || ! command -v kubeadm &> /dev/null; then
+    echo "Error: Required packages (docker, kubelet, kubeadm) are not installed"
+    exit 1
+fi
 
-# Load modules immediately
-modprobe overlay
-modprobe br_netfilter
+# Configure Docker daemon for Kubernetes
+if ! mkdir -p /etc/docker; then
+    echo "Error: Failed to create Docker directory"
+    exit 1
+fi
 
-# Configure sysctl parameters for Kubernetes
-cat > /etc/sysctl.d/kubernetes.conf <<EOF
-net.bridge.bridge-nf-call-ip6tables = 1
-net.bridge.bridge-nf-call-iptables = 1
-net.ipv4.ip_forward = 1
-EOF
-
-sysctl --system
-
-# Remove any old versions of containerd and docker
-apt-get remove -y containerd containerd.io docker docker.io runc
-apt-get autoremove -y
-
-# Install containerd dependencies
-apt-get update
-apt-get install -y ca-certificates curl gnupg
-
-# Add Docker's official GPG key
-install -m 0755 -d /etc/apt/keyrings
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-chmod a+r /etc/apt/keyrings/docker.gpg
-
-# Add Docker repository
-echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
-  tee /etc/apt/sources.list.d/docker.list > /dev/null
-
-# Install containerd
-apt-get update
-apt-get install -y containerd.io
-
-# Configure containerd
-mkdir -p /etc/containerd
-containerd config default | tee /etc/containerd/config.toml
-sed -i 's/SystemdCgroup = false/SystemdCgroup = true/' /etc/containerd/config.toml
-
-# Restart and enable containerd
-systemctl restart containerd
-systemctl enable containerd
-
-# Install Docker
-apt-get install -y docker-ce docker-ce-cli
-
-# Configure Docker daemon
-mkdir -p /etc/docker
 cat > /etc/docker/daemon.json <<EOF
 {
   "exec-opts": ["native.cgroupdriver=systemd"],
@@ -76,27 +32,54 @@ cat > /etc/docker/daemon.json <<EOF
 }
 EOF
 
-# Start and enable Docker
-systemctl enable docker
-systemctl start docker
+# Restart Docker to apply configurations
+systemctl daemon-reload
+systemctl restart docker
+
+if ! systemctl is-active --quiet docker; then
+    echo "Error: Docker service failed to restart"
+    exit 1
+fi
 
 # Disable swap
 swapoff -a
 sed -i '/swap/d' /etc/fstab
 
-# Install Kubernetes components
-mkdir -p /etc/apt/keyrings
-curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key | gpg --dearmor -o /etc/apt/keyrings/kubernetes-archive-keyring.gpg
-echo "deb [signed-by=/etc/apt/keyrings/kubernetes-archive-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /" | tee /etc/apt/sources.list.d/kubernetes.list
-apt-get update
-apt-get install -y kubelet kubeadm kubectl
+if grep -q "[[:space:]]swap[[:space:]]" /etc/fstab; then
+    echo "Error: Failed to remove swap entries from /etc/fstab"
+    exit 1
+fi
+
+# Load required Kubernetes modules
+cat > /etc/modules-load.d/k8s.conf <<EOF
+overlay
+br_netfilter
+EOF
+
+if ! modprobe overlay || ! modprobe br_netfilter; then
+    echo "Error: Failed to load required kernel modules"
+    exit 1
+fi
+
+# Configure sysctl parameters for Kubernetes
+cat > /etc/sysctl.d/kubernetes.conf <<EOF
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+net.ipv4.ip_forward = 1
+EOF
+
+sysctl --system
+
+# Hold Kubernetes packages to prevent unintended upgrades
 apt-mark hold kubelet kubeadm kubectl
 
 # Enable kubelet service
 systemctl enable --now kubelet
 
-# Reset any previous Kubernetes configuration (if any)
-kubeadm reset -f
+if ! systemctl is-active --quiet kubelet; then
+    echo "Error: Kubelet service failed to start"
+    exit 1
+fi
 
 echo "Kubernetes Node Configuration Complete!"
 echo "You can now run 'k8s-init-master.sh' on the master node or join worker nodes to the cluster."
