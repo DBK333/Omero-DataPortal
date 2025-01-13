@@ -6,8 +6,9 @@ metadata:
 data:
   hosts: |
     # Kubernetes Cluster Nodes
-    115.146.85.121 master-node
-    115.146.84.8 worker-01
+    # Replace <MASTER_IP> and <WORKER_IP> with your actual IP addresses
+    <MASTER_IP> master-node
+    <WORKER_IP> worker-01
 
 ---
 apiVersion: v1
