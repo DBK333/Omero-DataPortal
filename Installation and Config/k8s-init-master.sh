@@ -80,17 +80,6 @@ echo "Checking required ports..."
 required_ports=(6443 2379 2380 10250 10259 10257)
 ports_ok=true
 
-for port in "${required_ports[@]}"; do
-    if ! check_port "$port"; then
-        ports_ok=false
-    fi
-done
-
-if [ "$ports_ok" = false ]; then
-    echo "Some required ports are not open. Please check your Kubernetes installation."
-    exit 1
-fi
-
 # Initialize Kubernetes master
 init_kubernetes_master
 
