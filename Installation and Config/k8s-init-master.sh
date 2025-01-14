@@ -1,6 +1,13 @@
 #!/bin/bash
 set -euo pipefail
 
+# Function to disable swap
+disable_swap() {
+    echo "Disabling swap..."
+    sudo swapoff -a
+    sudo sed -i '/ swap / s/^/#/' /etc/fstab
+}
+
 # Check if running with sudo/root
 if [[ $EUID -ne 0 ]]; then
    echo "This script must be run with sudo or as root" 
@@ -17,6 +24,50 @@ check_port() {
         echo "✓ Port $port is listening"
         return 0
     fi
+}
+
+# Function to install and configure containerd
+install_containerd() {
+    echo "Installing containerd..."
+    sudo apt-get update
+    sudo apt-get install -y containerd
+
+    echo "Configuring containerd..."
+    sudo mkdir -p /etc/containerd
+    sudo containerd config default | sudo tee /etc/containerd/config.toml
+
+    echo "Starting and enabling containerd..."
+    sudo systemctl restart containerd
+    sudo systemctl enable containerd
+
+    echo "Verifying containerd status..."
+    sudo systemctl status containerd --no-pager
+}
+
+# Function to configure bridge networking
+configure_bridge_networking() {
+    echo "Configuring bridge networking..."
+
+    echo "Loading br_netfilter module..."
+    sudo modprobe br_netfilter
+
+    echo "Ensuring br_netfilter loads on boot..."
+    echo "br_netfilter" | sudo tee /etc/modules-load.d/k8s.conf
+
+    echo "Setting sysctl parameters..."
+    sudo tee /etc/sysctl.d/k8s.conf <<EOF
+net.bridge.bridge-nf-call-iptables = 1
+net.bridge.bridge-nf-call-ip6tables = 1
+net.ipv4.ip_forward = 1
+EOF
+
+    echo "Applying sysctl settings..."
+    sudo sysctl --system
+
+    echo "Verifying sysctl settings..."
+    sysctl net.bridge.bridge-nf-call-iptables
+    sysctl net.bridge.bridge-nf-call-ip6tables
+    sysctl net.ipv4.ip_forward
 }
 
 # Function to configure firewall
@@ -56,7 +107,8 @@ init_kubernetes_master() {
         --control-plane-endpoint="${CONTROL_PLANE_ENDPOINT}"
         
     # Setup kubeconfig
-    local USER_HOME=$(eval echo ~${SUDO_USER})
+    local USER_HOME
+    USER_HOME=$(eval echo ~${SUDO_USER})
     mkdir -p "${USER_HOME}/.kube"
     cp -i /etc/kubernetes/admin.conf "${USER_HOME}/.kube/config"
     chown "$(id -u ${SUDO_USER}):$(id -g ${SUDO_USER})" "${USER_HOME}/.kube/config"
@@ -72,6 +124,15 @@ init_kubernetes_master() {
 # Main execution
 echo "Starting Kubernetes master node initialization..."
 
+# Disable swap
+disable_swap
+
+# Install and configure containerd
+install_containerd
+
+# Configure bridge networking
+configure_bridge_networking
+
 # Setup firewall first
 setup_firewall
 
@@ -79,6 +140,15 @@ setup_firewall
 echo "Checking required ports..."
 required_ports=(6443 2379 2380 10250 10259 10257)
 ports_ok=true
+
+for port in "${required_ports[@]}"; do
+    check_port "$port" || ports_ok=false
+done
+
+if [ "$ports_ok" = false ]; then
+    echo "One or more required ports are not listening. Please resolve before proceeding."
+    exit 1
+fi
 
 # Initialize Kubernetes master
 init_kubernetes_master
