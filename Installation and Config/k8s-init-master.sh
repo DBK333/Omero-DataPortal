@@ -61,12 +61,11 @@ init_kubernetes_master() {
     cp -i /etc/kubernetes/admin.conf "${USER_HOME}/.kube/config"
     chown "$(id -u ${SUDO_USER}):$(id -g ${SUDO_USER})" "${USER_HOME}/.kube/config"
     
-    # Apply Flannel CNI
-    kubectl --kubeconfig /etc/kubernetes/admin.conf apply \
-        -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
-    
-    # Remove control-plane taint
-    kubectl --kubeconfig /etc/kubernetes/admin.conf taint nodes --all node-role.kubernetes.io/control-plane- || true
+   # Apply Calico CNI
+   kubectl apply -f https://projectcalico.docs.tigera.io/manifests/calico.yaml
+
+   # Remove control-plane taint to allow scheduling pods on the master node
+   kubectl taint nodes --all node-role.kubernetes.io/control-plane- || true
 }
 
 # Main execution
