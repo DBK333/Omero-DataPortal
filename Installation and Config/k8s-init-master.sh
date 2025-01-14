@@ -1,13 +1,6 @@
 #!/bin/bash
 set -euo pipefail
 
-# Function to disable swap
-disable_swap() {
-    echo "Disabling swap..."
-    sudo swapoff -a
-    sudo sed -i '/ swap / s/^/#/' /etc/fstab
-}
-
 # Check if running with sudo/root
 if [[ $EUID -ne 0 ]]; then
    echo "This script must be run with sudo or as root" 
@@ -124,9 +117,6 @@ init_kubernetes_master() {
 # Main execution
 echo "Starting Kubernetes master node initialization..."
 
-# Disable swap
-disable_swap
-
 # Install and configure containerd
 install_containerd
 
@@ -144,11 +134,6 @@ ports_ok=true
 for port in "${required_ports[@]}"; do
     check_port "$port" || ports_ok=false
 done
-
-if [ "$ports_ok" = false ]; then
-    echo "One or more required ports are not listening. Please resolve before proceeding."
-    exit 1
-fi
 
 # Initialize Kubernetes master
 init_kubernetes_master
