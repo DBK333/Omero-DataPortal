@@ -28,7 +28,7 @@ Download the Omero DataPortal repository from GitHub:
 ```bash
 git clone https://github.com/DBK333/Omero-DataPortal
 cd Omero-DataPortal/Installation\ and\ Config/
-chmod +x install-script.sh k8s-deploy.sh k8s-init-master.sh
+chmod +x install-script.sh k8s-deploy.sh k8s-init-master.sh k8s-worker-node.sh
 ```
 
 ### Step 3: Run the Installation Script
@@ -73,9 +73,9 @@ sudo ./k8s-deploy.sh
 
 ## Setting Up the Master Node
 
-1. Modify the `k8s-hostnames.yaml` file to specify the IP addresses of the worker and master nodes.
+1. Modify the `k8s-init-master.sh` file to specify the IP addresses of the master node.
    ```bash
-   nano k8s-hostnames.yaml 
+   nano k8s-init-master.sh 
    ```
 2. Deploy Kubernetes on the master node:
    ```bash
