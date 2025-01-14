@@ -7,6 +7,15 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
+# Add port check
+required_ports=(6443 2379 2380 10250 10259 10257)
+for port in "${required_ports[@]}"; do
+    if ! ss -tuln | grep -q ":$port "; then
+        echo "Required port $port is not open"
+        exit 1
+    fi
+done
+
 echo "Initializing Kubernetes Master Node..."
 
 # Set the pod network CIDR
@@ -28,9 +37,11 @@ chown "$(id -u ${SUDO_USER}):$(id -g ${SUDO_USER})" "${USER_HOME}/.kube/config"
 
 # Use the cluster's admin kubeconfig to apply resources
 # (explicit --kubeconfig to avoid localhost:8080 error)
-kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
+kubectl --kubeconfig /etc/kubernetes/admin.conf apply \
+  -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
+
 # Remove control-plane taint to allow pods on master node (optional)
-kubectl taint nodes --all node-role.kubernetes.io/control-plane-
+kubectl --kubeconfig /etc/kubernetes/admin.conf taint nodes --all node-role.kubernetes.io/control-plane- || true
 
 echo "Master Node Initialization Complete!"
 echo "Use the generated 'kubeadm join' command to join workers."
