@@ -19,50 +19,6 @@ check_port() {
     fi
 }
 
-# Function to install and configure containerd
-install_containerd() {
-    echo "Installing containerd..."
-    sudo apt-get update
-    sudo apt-get install -y containerd
-
-    echo "Configuring containerd..."
-    sudo mkdir -p /etc/containerd
-    sudo containerd config default | sudo tee /etc/containerd/config.toml
-
-    echo "Starting and enabling containerd..."
-    sudo systemctl restart containerd
-    sudo systemctl enable containerd
-
-    echo "Verifying containerd status..."
-    sudo systemctl status containerd --no-pager
-}
-
-# Function to configure bridge networking
-configure_bridge_networking() {
-    echo "Configuring bridge networking..."
-
-    echo "Loading br_netfilter module..."
-    sudo modprobe br_netfilter
-
-    echo "Ensuring br_netfilter loads on boot..."
-    echo "br_netfilter" | sudo tee /etc/modules-load.d/k8s.conf
-
-    echo "Setting sysctl parameters..."
-    sudo tee /etc/sysctl.d/k8s.conf <<EOF
-net.bridge.bridge-nf-call-iptables = 1
-net.bridge.bridge-nf-call-ip6tables = 1
-net.ipv4.ip_forward = 1
-EOF
-
-    echo "Applying sysctl settings..."
-    sudo sysctl --system
-
-    echo "Verifying sysctl settings..."
-    sysctl net.bridge.bridge-nf-call-iptables
-    sysctl net.bridge.bridge-nf-call-ip6tables
-    sysctl net.ipv4.ip_forward
-}
-
 # Function to configure firewall
 setup_firewall() {
     echo "Configuring firewall rules..."
@@ -100,8 +56,7 @@ init_kubernetes_master() {
         --control-plane-endpoint="${CONTROL_PLANE_ENDPOINT}"
         
     # Setup kubeconfig
-    local USER_HOME
-    USER_HOME=$(eval echo ~${SUDO_USER})
+    local USER_HOME=$(eval echo ~${SUDO_USER})
     mkdir -p "${USER_HOME}/.kube"
     cp -i /etc/kubernetes/admin.conf "${USER_HOME}/.kube/config"
     chown "$(id -u ${SUDO_USER}):$(id -g ${SUDO_USER})" "${USER_HOME}/.kube/config"
@@ -117,12 +72,6 @@ init_kubernetes_master() {
 # Main execution
 echo "Starting Kubernetes master node initialization..."
 
-# Install and configure containerd
-install_containerd
-
-# Configure bridge networking
-configure_bridge_networking
-
 # Setup firewall first
 setup_firewall
 
@@ -132,7 +81,9 @@ required_ports=(6443 2379 2380 10250 10259 10257)
 ports_ok=true
 
 for port in "${required_ports[@]}"; do
-    check_port "$port" || ports_ok=false
+    if ! check_port "$port"; then
+        ports_ok=false
+    fi
 done
 
 # Initialize Kubernetes master
