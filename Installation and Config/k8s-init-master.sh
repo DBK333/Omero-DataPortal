@@ -7,14 +7,44 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
-# Add port check
+# Enable UFW
+sudo ufw enable
+
+# Allow Kubernetes API Server
+sudo ufw allow 6443/tcp
+
+# Allow etcd Server Client API
+sudo ufw allow 2379:2380/tcp
+
+# Allow Kubelet API
+sudo ufw allow 10250/tcp
+
+# Allow Kube-Scheduler
+sudo ufw allow 10251/tcp
+
+# Allow Kube-Controller-Manager
+sudo ufw allow 10252/tcp
+
+# Allow Flannel VXLAN Overlay Network
+sudo ufw allow 8472/udp
+
+# Reload and check status
+sudo ufw reload
+sudo ufw status
+
+# Port check
+echo "Checking required ports..."
 required_ports=(6443 2379 2380 10250 10259 10257)
 for port in "${required_ports[@]}"; do
     if ! ss -tuln | grep -q ":$port "; then
         echo "Required port $port is not open"
         exit 1
+    else
+        echo "Port $port is open"
     fi
 done
+
+echo "All required ports are open and properly configured"
 
 echo "Initializing Kubernetes Master Node..."
 
