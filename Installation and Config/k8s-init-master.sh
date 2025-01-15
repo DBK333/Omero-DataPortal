@@ -33,10 +33,9 @@ setup_firewall() {
     sudo ufw allow 10251/tcp       # Kube-Scheduler
     sudo ufw allow 10252/tcp       # Kube-Controller-Manager
 
-    # Configure Calico ports
-    sudo ufw allow 179/tcp         # BGP communication between nodes
-    sudo ufw allow 4789/udp        # VXLAN encapsulation (if using VXLAN)
-    sudo ufw allow 5473/tcp        # Typha component (if using Typha for scalability)
+    # Configure Flannel ports
+    sudo ufw allow 8472/udp        # VXLAN encapsulation (default)
+    sudo ufw allow 8285/udp        # UDP encapsulation (if using UDP backend)
     sudo ufw allow 51820/udp       # WireGuard encryption (if using WireGuard)
 
     # Reload and show status
@@ -62,15 +61,12 @@ init_kubernetes_master() {
         
     # Setup kubeconfig
     local USER_HOME=$(eval echo ~${SUDO_USER})
-    mkdir -p "${USER_HOME}/.kube"
-    cp -i /etc/kubernetes/admin.conf "${USER_HOME}/.kube/config"
-    chown "$(id -u ${SUDO_USER}):$(id -g ${SUDO_USER})" "${USER_HOME}/.kube/config"
-    
-   # Apply Calico CNI
-   kubectl apply -f https://projectcalico.docs.tigera.io/manifests/calico.yaml
+    mkdir -p $HOME/.kube
+    sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+    sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
-   # Remove control-plane taint to allow scheduling pods on the master node
-   kubectl taint nodes --all node-role.kubernetes.io/control-plane- || true
+    kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
+    kubectl taint nodes --all node-role.kubernetes.io/control-plane-
 }
 
 # Main execution
@@ -78,17 +74,6 @@ echo "Starting Kubernetes master node initialization..."
 
 # Setup firewall first
 setup_firewall
-
-# Check required ports
-echo "Checking required ports..."
-required_ports=(6443 2379 2380 10250 10259 10257)
-ports_ok=true
-
-for port in "${required_ports[@]}"; do
-    if ! check_port "$port"; then
-        ports_ok=false
-    fi
-done
 
 # Initialize Kubernetes master
 init_kubernetes_master
