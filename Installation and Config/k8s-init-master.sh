@@ -32,8 +32,13 @@ setup_firewall() {
     sudo ufw allow 10250/tcp       # Kubelet API
     sudo ufw allow 10251/tcp       # Kube-Scheduler
     sudo ufw allow 10252/tcp       # Kube-Controller-Manager
-    sudo ufw allow 8472/udp        # Flannel VXLAN
-    
+
+    # Configure Calico ports
+    sudo ufw allow 179/tcp         # BGP communication between nodes
+    sudo ufw allow 4789/udp        # VXLAN encapsulation (if using VXLAN)
+    sudo ufw allow 5473/tcp        # Typha component (if using Typha for scalability)
+    sudo ufw allow 51820/udp       # WireGuard encryption (if using WireGuard)
+
     # Reload and show status
     sudo ufw reload
     sudo ufw status
