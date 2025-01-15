@@ -3,7 +3,7 @@ set -euo pipefail
 
 # Version pinning for components
 DOCKER_VERSION="24.0.7"
-KUBECTL_VERSION="1.28.0"
+KUBECTL_VERSION="1.30.0"
 HELM_VERSION="3.13.3"
 UBUNTU_VERSION="$(lsb_release -rs)"
 
