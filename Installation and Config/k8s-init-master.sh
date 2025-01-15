@@ -7,18 +7,6 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
-# Function to check if a port is open
-check_port() {
-    local port=$1
-    if ! ss -tuln | grep -q ":$port "; then
-        echo "✗ Port $port is not listening"
-        return 1
-    else
-        echo "✓ Port $port is listening"
-        return 0
-    fi
-}
-
 # Function to configure firewall
 setup_firewall() {
     echo "Configuring firewall rules..."
@@ -43,40 +31,79 @@ setup_firewall() {
     sudo ufw status
 }
 
-# Function to initialize Kubernetes master
-init_kubernetes_master() {
-    echo "Initializing Kubernetes Master Node..."
-    
-    # Set the pod network CIDR
-    local POD_NETWORK_CIDR="10.244.0.0/16"
-    
-    # Get the master IP or FQDN
-    echo "Please enter the Master IP or FQDN for the control plane endpoint:"
-    read -r CONTROL_PLANE_ENDPOINT
-    
-    # Initialize the control plane
-    kubeadm init \
-        --pod-network-cidr="${POD_NETWORK_CIDR}" \
-        --control-plane-endpoint="${CONTROL_PLANE_ENDPOINT}"
-        
-    # Setup kubeconfig
-    local USER_HOME=$(eval echo ~${SUDO_USER})
-    mkdir -p $HOME/.kube
-    sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-    sudo chown $(id -u):$(id -g) $HOME/.kube/config
-
-    kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
-    kubectl taint nodes --all node-role.kubernetes.io/control-plane-
-}
-
 # Main execution
 echo "Starting Kubernetes master node initialization..."
-
 # Setup firewall first
 setup_firewall
+sudo hostnamectl set-hostname master-node
+sudo cp /etc/hosts /etc/hosts.bak
+read -r MASTERNODE_IP
+sudo sed -i '/^127\./!b;N;/^127\./!a ${MASTERNODE_IP} master-node' /etc/hosts
+#Restart the terminal application to apply the hostname change.
 
-# Initialize Kubernetes master
-init_kubernetes_master
+echo "Starting Kubernetes master node initialization..."
+
+# Set the hostname to "master-node"
+sudo hostnamectl set-hostname master-node
+
+# Backup the existing /etc/hosts file
+sudo cp /etc/hosts /etc/hosts.bak
+
+# Prompt for the master node IP address
+read -p "Enter the IP address of the master node: " MASTERNODE_IP
+
+# Validate that the MASTERNODE_IP is not empty
+if [[ -z "$MASTERNODE_IP" ]]; then
+    echo "Error: IP address cannot be empty. Exiting."
+    exit 1
+fi
+# Prompt for the master node IP address
+read -p "Enter the IP address of the worker node: " WORKERNODE_IP
+
+# Validate that the MASTERNODE_IP is not empty
+if [[ -z "$MASTERNODE_IP" ]]; then
+    echo "Error: IP address cannot be empty. Exiting."
+    exit 1
+fi
+# Add the master node entry to /etc/hosts after the last line starting with 127.x.x.x
+sudo sed -i "/^127\./!b;N;/^127\./!a ${WORKERNODE_IP} master-node" /etc/hosts
+sudo sed -i "/^127\./!b;N;/^127\./!a ${MASTERNODE_IP} master-node" /etc/hosts
+
+echo "Hostname and hosts file updated. Restart your terminal to apply changes."
+exec "$SHELL" -l
+
+
+sudo sh -c 'echo KUBELET_EXTRA_ARGS="--cgroup-driver=cgroupfs" >> /etc/default/kubelet'
+
+sudo systemctl daemon-reload && sudo systemctl restart kubelet
+
+cat > /etc/docker/daemon.json <<EOF
+{
+  "exec-opts": ["native.cgroupdriver=systemd"],
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "100m"
+  },
+  "storage-driver": "overlay2"
+}
+EOF
+
+# Restart Docker to apply configurations
+sudo systemctl daemon-reload && sudo systemctl restart docker
+
+if ! systemctl is-active --quiet docker; then
+    echo "Error: Docker service failed to restart"
+    exit 1
+fi
+sudo sh -c 'echo Environment="KUBELET_EXTRA_ARGS=--fail-swap-on=false" >> /etc/systemd/system/kubelet.service.d/10-kubeadm.conf'
+sudo systemctl daemon-reload && sudo systemctl restart kubelet
+sudo kubeadm init --control-plane-endpoint=master-node --upload-certs
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
+kubectl taint nodes --all node-role.kubernetes.io/control-plane-
+
 
 echo "Master Node Initialization Complete!"
 echo "-------------------------------------"

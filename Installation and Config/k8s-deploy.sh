@@ -21,33 +21,9 @@ if ! mkdir -p /etc/docker; then
     exit 1
 fi
 
-sudo mkdir -p /etc/containerd
-sudo containerd config default | sudo tee /etc/containerd/config.toml
-sudo systemctl restart containerd
-
-cat > /etc/docker/daemon.json <<EOF
-{
-  "exec-opts": ["native.cgroupdriver=systemd"],
-  "log-driver": "json-file",
-  "log-opts": {
-    "max-size": "100m"
-  },
-  "storage-driver": "overlay2"
-}
-EOF
-
-# Restart Docker to apply configurations
-systemctl daemon-reload
-systemctl restart docker
-
-if ! systemctl is-active --quiet docker; then
-    echo "Error: Docker service failed to restart"
-    exit 1
-fi
-
 # Disable swap
-swapoff -a
-sed -i '/swap/d' /etc/fstab
+sudo swapoff -a
+sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
 
 if grep -q "[[:space:]]swap[[:space:]]" /etc/fstab; then
     echo "Error: Failed to remove swap entries from /etc/fstab"
@@ -55,7 +31,7 @@ if grep -q "[[:space:]]swap[[:space:]]" /etc/fstab; then
 fi
 
 # Load required Kubernetes modules
-cat > /etc/modules-load.d/k8s.conf <<EOF
+cat > /etc/modules-load.d/containerd.conf <<EOF
 overlay
 br_netfilter
 EOF

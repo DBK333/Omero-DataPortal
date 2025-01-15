@@ -1,3 +1,4 @@
+sudo hostnamectl set-hostname worker01
 # Enable UFW
 sudo ufw enable
 
@@ -17,16 +18,6 @@ echo "Enabled Flannel VXLAN overlay network port (UDP 8472)"
 sudo ufw reload
 sudo ufw status
 
-# Port check
-echo "Checking required ports..."
-required_ports=(10250 30000 32767 8472)
-for port in "${required_ports[@]}"; do
-    if ! ss -tuln | grep -q ":$port "; then
-        echo "Required port $port is not open"
-        exit 1
-    else
-        echo "Port $port is open"
-    fi
-done
+sudo systemctl stop apparmor && sudo systemctl disable apparmor
+sudo systemctl restart containerd.service
 
-echo "All required ports are open and properly configured"
