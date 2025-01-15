@@ -66,17 +66,3 @@ else
   echo "Docker Compose is already installed. Skipping..."
 fi
 
-#
-# 3. Retrieve docker composer
-#
-git clone https://github.com/ome/docker-example-omero.git
-cd docker-example-omero
-sudo docker compose pull
-sudo docker compose up -d
-
-echo "Setup complete!"
-echo "Services are running in the background."
-echo "You can check logs with 'docker-compose logs -f [service_name]'"
-echo "Visit http://<YOUR_SERVER_IP>:4080 to access OMERO.web."
-sleep 30
-sudo docker compose logs -f
