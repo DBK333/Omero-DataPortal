@@ -79,7 +79,7 @@ else
 fi
 
 
-YAML_FILE="docker-compose.yml"
+YAML_FILE="/home/ubuntu/redmane-suth/docker-compose.yml"
 
 # Check if the file exists
 if [[ ! -f "$YAML_FILE" ]]; then
