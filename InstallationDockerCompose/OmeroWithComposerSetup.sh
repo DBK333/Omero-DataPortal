@@ -18,6 +18,7 @@ sudo ufw allow 4063/tcp
 sudo ufw allow 4064/tcp
 sudo ufw allow 4080/tcp
 sudo ufw allow 8080/tcp
+sudo ufw allow 4040/tcp
 
 #
 # 2. Install Docker Engine and Docker Compose if not present
