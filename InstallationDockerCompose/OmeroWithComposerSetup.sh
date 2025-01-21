@@ -67,3 +67,30 @@ else
   echo "Docker Compose is already installed. Skipping..."
 fi
 
+# Define the network name
+NETWORK_NAME="omero"
+
+# Check if the Docker network already exists
+if ! docker network ls | grep -q "$NETWORK_NAME"; then
+  echo "Creating external network: $NETWORK_NAME"
+  docker network create "$NETWORK_NAME"
+else
+  echo "Network $NETWORK_NAME already exists."
+fi
+
+
+YAML_FILE="docker-compose.yml"
+
+# Check if the file exists
+if [[ ! -f "$YAML_FILE" ]]; then
+  echo "Error: $YAML_FILE not found!"
+  exit 1
+fi
+
+# Add the networks section to the YAML file
+cat <<EOL >> "$YAML_FILE"
+
+networks:
+  omero:
+    external: true
+EOL

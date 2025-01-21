@@ -44,22 +44,9 @@ services:
     ports:
       - "4080:4080"
 
-  keycloak:
-    image: quay.io/keycloak/keycloak:latest
-    container_name: keycloak
-    environment:
-      - KEYCLOAK_ADMIN=admin
-      - KEYCLOAK_ADMIN_PASSWORD=admin
-    command: >
-      start-dev
-      --http-relative-path=/auth
-    ports:
-      - "8080:8080"
-    networks:
-      - omero
-
 networks:
   omero:
+    external: true
 
 volumes:
   database:

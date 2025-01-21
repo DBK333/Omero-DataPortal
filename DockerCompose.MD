@@ -9,7 +9,7 @@ To set up the project using Docker Compose, follow these steps:
 1. Clone the **Omero-DataPortal** repository:
     ```bash
     git clone https://github.com/DBK333/Omero-DataPortal
-    cd Omero-DataPortal
+    cd Omero-DataPortal/cd InstallationDockerCompose/
     ```
 
 2. Make the setup script executable and run it:
@@ -17,23 +17,11 @@ To set up the project using Docker Compose, follow these steps:
     chmod +x OmeroWithComposerSetup.sh
     sudo ./OmeroWithComposerSetup.sh
     ```
-
-3. Navigate back to the parent directory:
-    ```bash
-    cd ..
-    ```
-
-4. Clone the **docker-example-omero** repository:
-    ```bash
-    git clone https://github.com/ome/docker-example-omero.git
-    cd docker-example-omero
-    ```
-
 ---
 
 ## Step 2: Modify the `docker-compose.yml` File
 
-1. Open the `docker-compose.yml` file for editing.
+1. Open the `omero-compose.yml` file for editing.
 
 2. Locate the `ROOTPASS` environment variable and update it with a secure password:
     ```yaml
@@ -53,25 +41,16 @@ To set up the project using Docker Compose, follow these steps:
 
 1. Pull the necessary Docker images:
     ```bash
-    sudo docker compose pull
+    sudo docker compose -f omero-compose.yaml pull
     ```
 
 2. Start the services in detached mode:
     ```bash
-    sudo docker compose up -d
-    ```
-
-3. Display a confirmation message:
-    ```bash
-    echo "Setup complete!"
-    echo "Services are running in the background."
-    echo "You can check logs with 'docker-compose logs -f [service_name]'."
-    echo "Visit http://<YOUR_SERVER_IP>:4080 to access OMERO.web."
+    sudo docker compose -f omero-compose.yaml up -d
     ```
 
 4. Optionally, monitor the service logs:
     ```bash
-    sleep 30
     sudo docker compose logs -f
     ```
 
