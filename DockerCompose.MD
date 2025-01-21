@@ -10,7 +10,7 @@ To set up the project using Docker Compose, follow these steps:
     ```bash
     git clone https://github.com/DBK333/Omero-DataPortal
     git clone https://github.com/varshithmee/redmane-auth/
-    cd Omero-DataPortal/cd InstallationDockerCompose/
+    cd Omero-DataPortal/InstallationDockerCompose/
     ```
 
 2. Make the setup script executable and run it:
@@ -80,3 +80,5 @@ To set up the project using Docker Compose, follow these steps:
   ```
 - **Documentation**: For more details, refer to the official project repositories:
   - [docker-example-omero Repository](https://github.com/ome/docker-example-omero)
+  - [Redmane Authentication Repository]
+  (https://github.com/varshithmee/redmane-auth/)
