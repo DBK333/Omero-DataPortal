@@ -8,7 +8,7 @@ To set up the project using Docker Compose, follow these steps:
 
 1. Clone the **Omero-DataPortal** repository:
     ```bash
-    git clone https://github.com/DBK333/Omero-DataPortal/tree/main
+    git clone https://github.com/DBK333/Omero-DataPortal
     cd Omero-DataPortal
     ```
 

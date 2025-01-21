@@ -72,7 +72,6 @@ sudo sed -i "/^127\./!b;N;/^127\./!a ${MASTERNODE_IP} master-node" /etc/hosts
 echo "Hostname and hosts file updated. Restart your terminal to apply changes."
 exec "$SHELL" -l
 
-
 sudo sh -c 'echo KUBELET_EXTRA_ARGS="--cgroup-driver=cgroupfs" >> /etc/default/kubelet'
 
 sudo systemctl daemon-reload && sudo systemctl restart kubelet
