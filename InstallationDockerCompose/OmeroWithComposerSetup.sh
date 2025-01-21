@@ -13,10 +13,11 @@ fi
 echo "Enabling UFW..."
 sudo ufw enable
 
-echo "Allowing OMERO.server ports (4063, 4064) and OMERO.web port (4080)..."
+echo "Allowing OMERO.server ports (4063, 4064), Keycloak port (8080)and OMERO.web port (4080)..."
 sudo ufw allow 4063/tcp
 sudo ufw allow 4064/tcp
 sudo ufw allow 4080/tcp
+sudo ufw allow 8080/tcp
 
 #
 # 2. Install Docker Engine and Docker Compose if not present
