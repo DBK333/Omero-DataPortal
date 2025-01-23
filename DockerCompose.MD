@@ -9,7 +9,6 @@ To set up the project using Docker Compose, follow these steps:
 1. Clone the **Omero-DataPortal** repository:
     ```bash
     git clone https://github.com/DBK333/Omero-DataPortal
-    git clone https://github.com/varshithmee/redmane-auth/
     cd Omero-DataPortal/InstallationDockerCompose/
     ```
 
@@ -52,7 +51,7 @@ To set up the project using Docker Compose, follow these steps:
 
 4. Optionally, monitor the service logs:
     ```bash
-    sudo docker compose logs -f
+    sudo docker compose -f omero-compose.yaml logs -f
     ```
 
 ---

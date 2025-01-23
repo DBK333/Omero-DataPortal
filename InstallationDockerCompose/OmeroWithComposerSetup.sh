@@ -78,20 +78,21 @@ if ! docker network ls | grep -q "$NETWORK_NAME"; then
 else
   echo "Network $NETWORK_NAME already exists."
 fi
+# cd ..
+# cd ..
 
+# YAML_FILE="$HOME/redmane-suth/docker-compose.yml"
 
-YAML_FILE="$HOME/redmane-suth/docker-compose.yml"
+# # Check if the file exists
+# if [[ ! -f "$YAML_FILE" ]]; then
+#   echo "Error: $YAML_FILE not found!"
+#   exit 1
+# fi
 
-# Check if the file exists
-if [[ ! -f "$YAML_FILE" ]]; then
-  echo "Error: $YAML_FILE not found!"
-  exit 1
-fi
+# # Add the networks section to the YAML file
+# cat <<EOL >> "$YAML_FILE"
 
-# Add the networks section to the YAML file
-cat <<EOL >> "$YAML_FILE"
-
-networks:
-  omero:
-    external: true
-EOL
+# networks:
+#   omero:
+#     external: true
+# EOL
