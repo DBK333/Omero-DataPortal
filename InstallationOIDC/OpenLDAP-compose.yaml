@@ -1,0 +1,39 @@
+
+networks:
+  # Referencing an already-created external network
+  OIDC:
+    external: true
+
+services:
+  openldap:
+    image: bitnami/openldap:latest
+    container_name: openldap
+    restart: unless-stopped
+
+    # Expose LDAP and LDAPS ports as needed
+    ports:
+      - "389:389"    # LDAP port
+      - "636:636"    # LDAPS port
+
+    environment:
+      # Adjust domain components (dc=...) as needed:
+      - LDAP_ROOT=dc=example,dc=com
+      
+      # Initial LDAP admin user
+      - LDAP_ADMIN_USERNAME=admin
+
+      # Initial LDAP admin password (change to something more secure)
+      - LDAP_ADMIN_PASSWORD=adminpassword
+
+      # Whether the LDAP Configuration Admin user is enabled
+      - LDAP_CONFIG_ADMIN_ENABLED=yes
+
+      # LDAP Configuration Admin password (change to something secure)
+      - LDAP_CONFIG_ADMIN_PASSWORD=configpassword
+
+    volumes:
+      # Local volume for persistent data
+      - ./ldap_data:/bitnami/openldap
+
+    networks:
+      - OIDC

@@ -19,7 +19,7 @@ Follow the [Docker Compose Installation Guide](https://github.com/DBK333/Omero-D
 
 ### Installation with Kubernetes
 
-Follow the [Docker Compose Installation Guide](https://github.com/DBK333/Omero-DataPortal/blob/main/OmeroWithKubernetes.md) to set up the Omero Data Portal using Kubernetes.
+Follow the [Docker Kubernetes Installation Guide](https://github.com/DBK333/Omero-DataPortal/blob/main/OmeroWithKubernetes.md) to set up the Omero Data Portal using Kubernetes.
 
 ## Contribution
 
