@@ -16,6 +16,7 @@ sudo apt-get install -y make
 sudo ufw allow 389/tcp
 sudo ufw allow 636/tcp
 sudo ufw allow 8080/tcp
+sudo ufw allow 8443/tcp
 sudo ufw allow 4040/tcp
 
 ########################################

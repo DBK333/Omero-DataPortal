@@ -55,7 +55,15 @@
 | Protocol | Port Range   | Purpose                         |
 |----------|--------------|---------------------------------|
 | TCP      | 8080         | Keycloak HTTP (Admin Console)   |
-| TCP      | 4040         | Keycloak HTTPS                  |
+| TCP      | 8443         | Keycloak HTTPS                  |
+
+---
+
+## ngrok
+
+| Protocol | Port Range   | Purpose                         |
+|----------|--------------|---------------------------------|
+| TCP      | 4040         | ngrok Web Interface (HTTP)      |
 
 ---
 
@@ -92,6 +100,8 @@
    - Kubernetes Documentation: [Kubernetes Networking](https://kubernetes.io/docs/reference/ports-and-protocols/)
 6. **Flannel VXLAN Port**:
    - Flannel Documentation: [Flannel Configuration](https://github.com/flannel-io/flannel)
+7. **ngrok Ports**:
+   - ngrok Documentation: [ngrok HTTP Tunnels](https://ngrok.com/docs)
 
 ---
 
@@ -99,8 +109,8 @@
 1. **OpenLDAP** uses standard ports 389 (LDAP) and 636 (LDAPS).
 2. **Omero Web** and **Omero Server** require ports 4061-4064 for binary data transfer and web services.
 3. **Keycloak** runs on port 8080 for HTTP and 8443 for HTTPS.
-4. **PostgreSQL** should not expose port 5432 externally. It is designed to be accessed internally within the network.
-5. **Server Access** uses SSH (port 22) and HTTPS (port 443).
-6. **Kubernetes Master and Worker Node Ports** are necessary for managing control plane and worker operations.
-7. **Flannel VXLAN (UDP port 8472)** supports overlay networking for Kubernetes clusters.
-
+4. **ngrok** exposes a web interface on port 4040 for managing tunnels.
+5. **PostgreSQL** should not expose port 5432 externally. It is designed to be accessed internally within the network.
+6. **Server Access** uses SSH (port 22) and HTTPS (port 443).
+7. **Kubernetes Master and Worker Node Ports** are necessary for managing control plane and worker operations.
+8. **Flannel VXLAN (UDP port 8472)** supports overlay networking for Kubernetes clusters.
