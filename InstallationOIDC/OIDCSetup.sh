@@ -2,7 +2,14 @@
 
 # Exit on any error
 set -e
-TOKEN = "addtokenhere"
+
+################################################################################
+# 0. Define your NGROK Auth Token here (optional)
+#    Or rely on an environment variable (TOKEN) already set in the VM.
+################################################################################
+# Hard-code a default value (optional); or comment out if you only want to rely on a pre-set env var:
+TOKEN="${TOKEN:-addtokenhere}"
+
 ########################################
 # 1. Install make (if needed) & open firewall ports
 ########################################
@@ -20,25 +27,19 @@ sudo ufw allow 8443/tcp
 sudo ufw allow 4040/tcp
 
 ########################################
-# 2. Adjust directories
+# 2. Adjust directories (clone or cd into your repo)
 ########################################
-# Move up two directories
-git clone https://github.com/varshithmee/redmane-auth/
+# Clone only if it's not already cloned. Otherwise, remove or comment out the clone step:
+git clone https://github.com/varshithmee/redmane-auth/ || true
+
+# Adjust this path as needed if you already have the repo
 cd keycloak-dev
-
-# Create .env file with default values
-cp .env .env.local
-
-# Create .env.local for your local overrides
-touch .env.local
-
-echo "NGROK_AUTH_TOKEN=TOKEN" >> .env.local
 
 ########################################
 # 3. Paths to compose files
 ########################################
-YAML_FILE="$HOME/redmane-suth/docker-compose.yml"    # main docker-compose file
-YAML_FILE2="$HOME/Omero-DataPortal/OIDCSetup.sh"      # second file (treated as compose YAML)
+YAML_FILE="$HOME/redmane-suth/docker-compose.yml"  # main docker-compose file
+YAML_FILE2="$HOME/Omero-DataPortal/OIDCSetup.sh"    # second file (treated as compose YAML)
 
 # Check if the main docker-compose.yml exists
 if [[ ! -f "$YAML_FILE" ]]; then
@@ -47,7 +48,7 @@ if [[ ! -f "$YAML_FILE" ]]; then
 fi
 
 ########################################
-# 4. Append the 'networks' block for OIDC
+# 4. Append the 'networks' block for OIDC (only if not already present)
 ########################################
 cat <<EOL >> "$YAML_FILE"
 
@@ -55,6 +56,7 @@ networks:
   OIDC:
     external: true
 EOL
+
 ########################################
 # 5. Create OIDC network
 ########################################
@@ -71,8 +73,6 @@ make up
 ########################################
 # Move up two directories again, then into $HOME/Omero-DataPortal
 cd ..
-cd ..
-cd "$HOME/Omero-DataPortal"
 
 echo "Creating OIDC network (if it doesn't exist) and starting Bitnami OpenLDAP..."
 
