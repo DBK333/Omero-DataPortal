@@ -2,7 +2,7 @@
 
 # Exit on any error
 set -e
-
+TOKEN = "addtokenhere"
 ########################################
 # 1. Install make (if needed) & open firewall ports
 ########################################
@@ -23,8 +23,16 @@ sudo ufw allow 4040/tcp
 # 2. Adjust directories
 ########################################
 # Move up two directories
-cd ..
-cd ..
+git clone https://github.com/varshithmee/redmane-auth/
+cd keycloak-dev
+
+# Create .env file with default values
+cp .env .env.local
+
+# Create .env.local for your local overrides
+touch .env.local
+
+echo "NGROK_AUTH_TOKEN=TOKEN" >> .env.local
 
 ########################################
 # 3. Paths to compose files
@@ -67,9 +75,6 @@ cd ..
 cd "$HOME/Omero-DataPortal"
 
 echo "Creating OIDC network (if it doesn't exist) and starting Bitnami OpenLDAP..."
-
-# Create the OIDC network
-docker network create OIDC || true
 
 # Spin up the service in detached mode using your second file
 docker compose -f "$YAML_FILE2" up -d
