@@ -18,14 +18,7 @@ git clone https://github.com/DBK333/Omero-DataPortal
 cd Omero-DataPortal/InstallationOIDC/
 ```
 
-### Step 2: Obtain an Ngrok Token
-Retrieve your token from Ngrok and set it as an environment variable:
-
-```bash
-sudo export TOKEN="mySecretNgrokToken"
-```
-
-### Step 3: Grant Execute Permissions and Run the Setup Script
+### Step 2: Grant Execute Permissions and Run the Setup Script
 Make the setup script executable and run it:
 
 ```bash

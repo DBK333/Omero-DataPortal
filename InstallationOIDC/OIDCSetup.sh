@@ -3,13 +3,6 @@
 # Exit on any error
 set -e
 
-################################################################################
-# 0. Define your NGROK Auth Token here (optional)
-#    Or rely on an environment variable (TOKEN) already set in the VM.
-################################################################################
-# Hard-code a default value (optional); or comment out if you only want to rely on a pre-set env var:
-TOKEN="${TOKEN:-addtokenhere}"
-
 ########################################
 # 1. Install make (if needed) & open firewall ports
 ########################################
