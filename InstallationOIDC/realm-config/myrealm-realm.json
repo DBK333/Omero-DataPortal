@@ -8,14 +8,14 @@
         "displayName": "OpenLDAP-Writable",
         "priority": 0,
         "config": {
-          "importEnabled": ["true"],
-          "syncRegistrations": ["true"],
-          "connectionUrl": ["ldap://openldap:389"],
-          "bindDn": ["cn=admin,dc=example,dc=com"],
-          "bindCredential": ["adminpassword"],
-          "usersDn": ["ou=users,dc=example,dc=com"],
-          "editMode": ["WRITABLE"],
-          "vendor": ["other"]
+          "importEnabled": "true",
+          "syncRegistrations": "true",
+          "connectionUrl": "ldap://openldap:389",
+          "bindDn": "cn=admin,dc=example,dc=com",
+          "bindCredential": "adminpassword",
+          "usersDn": "ou=users,dc=example,dc=com",
+          "editMode": "WRITABLE",
+          "vendor": "other"
         }
       }
     ],
