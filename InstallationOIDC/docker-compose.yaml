@@ -18,7 +18,7 @@ services:
       - LDAP_CONFIG_ADMIN_ENABLED=yes
       - LDAP_CONFIG_ADMIN_PASSWORD=configpassword
     volumes:
-      - ./ldap_data:/bitnami/openldap
+      - openldap_data:/bitnami/openldap
     networks:
       - OIDC
 
