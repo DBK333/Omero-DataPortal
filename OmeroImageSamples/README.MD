@@ -1,64 +1,88 @@
-# Omero Data Portal
 
-Welcome to the Omero Data Portal! Use the navigation links below to get started.
+# **Microscopy Image Processing Workflow**
 
-## Table of Contents
+This repository contains a complete pipeline for processing **microscopy images** (including **CZI** and **Zarr** formats) and simulating a basic image processing workflow. All data in this repository, including **CZI** files and clinical metadata, is **synthetically generated** or modified for **testing and educational purposes** only.
 
-- [Prerequisites](#Prerequisites)
-- [Installation](#installation)
-  - [With Docker Compose](#installation-with-docker-compose)
-  - [With Kubernetes](#installation-with-kubernetes)
-- [Contribution](#contribution)
+## **Purpose**
 
-## Prerequisites
+This repository demonstrates a basic image processing workflow involving the following steps:
 
-### 1. Running Instance
-Ensure you have a **fully running instance** of **Ubuntu 22.04 LTS (Jammy)**.  
-If your instance is not yet set up, refer to the [NectarVM Documentation](#) for detailed instructions on creating a new instance.
+1. **Preprocessing**:
+   - **Deskewing**: Correcting any skew in the images that may have resulted during the image acquisition process.
+   - **Deconvolution**: Improving the sharpness and quality of the microscopy images.
+   - **Downsampling**: Reducing the resolution of the images for storage and processing optimization.
+   - **Metadata Extraction**: Extracting metadata from **CZI** or **Zarr** files and associating it with clinical sample information (such as **patientID** and **sampleID**).
+
+2. **Data Conversion**:
+   - **CZI to Zarr**: Converting **CZI** files (Zeiss microscopy files) into the **Zarr** format for efficient storage and processing.
+
+3. **Archiving**:
+   - Compressing processed image files for storage or transfer.
+
+This workflow serves as a foundational pipeline for more complex bioinformatics and image processing applications.
+
+## **Repository Structure**
+
+* `main.py`: The main Python script that includes all steps for converting **CZI** files to **Zarr** format, preprocessing the images (deskew, deconvolve, downsample), and visualizing the processed images.
+* `ExternalMetadata_SampledClinicalData_Omero.csv`: A CSV file containing **synthetic clinical metadata** used for linking image data with sample and patient information.
+* `README.md`: This file, providing documentation for the repository.
+
+## **Usage**
+
+### 1. **Clone the Repository**:
+```bash
+git clone <repository_url>
+cd <repository_name>
+```
+
+### 2. **Running the Full Workflow**:
+The full pipeline, including both the **conversion** of **CZI** files to **Zarr** format and **image preprocessing**, can be run with a single command from `main.py`:
+
+```bash
+python main.py
+```
+
+### 3. **How the Workflow Works**:
+- **CZI to Zarr Conversion**: The script will load **CZI** files and convert them to **Zarr** format for easier processing and storage.
+- **Preprocessing**: After converting to Zarr, the script will:
+  - **Deskew** the images to correct any distortions.
+  - **Deconvolve** the images to improve image clarity.
+  - **Downsample** the images to reduce resolution for storage efficiency.
+- **Output**: Processed images will be saved in the specified output directory.
+
+### 4. **Viewing the Images**:
+After preprocessing, you can visualize the processed **Zarr** images using the following code snippet:
+
+```python
+import napari
+import zarr
+
+# Path to the processed Zarr file
+zarr_file_path = '/path/to/processed_image.zarr'
+data = zarr.open(zarr_file_path, mode='r')
+
+# Start the napari viewer and display the image
+viewer = napari.view_image(data)
+napari.run()
+```
+
+This will open the processed images in **napari**, where you can interactively explore them.
+
+## **Important Notes on Data Privacy and Usage**
+
+**All data in this repository is synthetic and does not represent any real biological or personal data. It is used solely for educational purposes and software development. No sensitive or personally identifiable data is involved in this project.**
 
 ---
 
-### 2. Open Ports
-Make sure all necessary ports are open for proper communication. Refer to the [Ports Configuration Guide](port.md) for detailed instructions on configuring your ports.
+## **Image Processing Details:**
+
+1. **Deskewing**: This step corrects any skew or tilt in the images due to the imaging system.
+2. **Deconvolution**: A process that improves the clarity and sharpness of the images, reducing blur and enhancing details.
+3. **Downsampling**: Reduces the resolution of the images for quicker processing, especially for large datasets.
 
 ---
 
-### 3. Security Groups (For Cloud Users)
-If you are using a cloud platform, it is recommended to create **separate security groups** for better management and security. Suggested security groups:
-- **Omero**: For Omero-related components.
-- **OIDC**: For OpenID Connect components.
-- **Kubernetes Worker**: For Kubernetes worker nodes.
-- **Kubernetes Control Planes**: For Kubernetes control planes.
-
-Assigning separate security groups ensures isolation and better security compliance.
-
----
-
-## Automated Package Installation
-
-All necessary packages and dependencies will be downloaded and installed automatically using the provided script.
-
----
-
-## Installation
-
-To install OMERO, there are two methods available: using Docker Compose or Kubernetes. The choice depends on your scaling needs. For a single-instance setup, Docker Compose is recommended, while Kubernetes is ideal for multi-instance deployments. All prerequisites are covered in the guide, so no additional preparation steps are required beforehand.
-
-### Installation with Docker Compose
-
-Follow the [Docker Compose Installation Guide](https://github.com/DBK333/Omero-DataPortal/blob/main/DockerCompose.MD) to set up the Omero Data Portal using Docker Compose.
-
-### Installation with Kubernetes
-
-Follow the [Kubernetes Installation Guide](https://github.com/DBK333/Omero-DataPortal/blob/main/OmeroWithKubernetes.md) to set up the Omero Data Portal using Kubernetes.
-
----
-
-## Contribution
-
-We welcome contributions! Here are some resources to get you started:
-
-- [Docker Example OMERO](https://github.com/ome/docker-example-omero)
-- [Kubernetes OMERO](https://github.com/manics/kubernetes-omero)
-
-Feel free to fork the repositories, submit issues, or create pull requests to help improve the project.
+### **Summary of Key Steps**:
+- **Run the workflow**: `python main.py` to convert **CZI** files to **Zarr** and preprocess the images (deskew, deconvolve, downsample).
+- **View the images**: Visualize the processed images using **napari**.
+- **No configuration needed**: All settings are handled within `main.py`.
