@@ -2,6 +2,7 @@
     "realm": "myrealm",
     "enabled": true,
     "sslRequired": "EXTERNAL",
+  
     "userFederationProviders": [
       {
         "providerName": "ldap",
@@ -19,6 +20,7 @@
         }
       }
     ],
+  
     "identityProviders": [
       {
         "alias": "auth0-idp",
@@ -37,6 +39,7 @@
         }
       }
     ],
+  
     "authenticationFlows": [
       {
         "alias": "first broker login with random password",
@@ -56,13 +59,14 @@
             "priority": 20
           },
           {
-            "authenticator": "set-random-pwd-script-authenticator", 
+            "authenticator": "set-random-pwd-script-authenticator",
             "requirement": "REQUIRED",
             "priority": 30
           }
         ]
       }
     ],
+  
     "components": [
       {
         "id": "set-random-pwd-script-authenticator",
@@ -71,7 +75,7 @@
         "providerType": "org.keycloak.authentication.Authenticator",
         "parentId": "myrealm",
         "config": {
-          "scriptCode": "/* script content goes here */"
+          "scriptCode": "var RandomString = Java.type(\"org.keycloak.common.util.RandomString\");\nvar PasswordCredentialModel = Java.type(\"org.keycloak.models.credential.PasswordCredentialModel\");\n\nfunction authenticate(context) {\n    var user = context.getUser();\n    if (!user) {\n        context.attempted();\n        return;\n    }\n\n    var randomPassword = RandomString.randomCode(12); // 12 char random pwd\n    var credential = PasswordCredentialModel.createFromValues(randomPassword, false);\n\n    session.userCredentialManager().updateCredential(realm, user, credential);\n\n    //print(\"Assigned random LDAP password: \" + randomPassword);\n    context.success();\n}\n\nfunction action(context) {\n}\n\nfunction requiresUser() {\n    return true;\n}\n\nfunction configuredFor(context, user) {\n    return false;\n}\n\nfunction setRequiredActions(context, user) {\n}\n\nfunction close() {\n}\n"
         }
       }
     ]
