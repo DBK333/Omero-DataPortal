@@ -63,69 +63,9 @@ sudo ufw allow 8443/tcp
 sudo ufw allow 4040/tcp
 
 ########################################
-# 2. Adjust directories (clone or cd into your repo)
+# 2. Start docker compose
 ########################################
-# Clone only if it's not already cloned. Otherwise, remove or comment out the clone step:
-git clone https://github.com/varshithmee/redmane-auth/ || true
-
-# Adjust this path as needed if you already have the repo
-cd redmane-auth
-
-########################################
-# 3. Paths to compose files
-########################################
-YAML_FILE="docker-compose.yaml"  # main docker-compose file
-YAML_FILE2="OIDCSetup.sh"    # second file (treated as compose YAML)
-
-# Check if the main docker-compose.yml exists
-if [[ ! -f "$YAML_FILE" ]]; then
-  echo "Error: $YAML_FILE not found!"
-  exit 1
-fi
-
-########################################
-# 4. Append the 'networks' block for OIDC (only if not already present)
-########################################
-cat <<EOL >> "$YAML_FILE"
-
-networks:
-  OIDC:
-    external: true
-EOL
-
-########################################
-# 5. Create OIDC network
-########################################
-docker network create OIDC || true
-
-########################################
-# 6. Run 'make up'
-########################################
-# Prompt the user for the NGROK_AUTH_TOKEN
-echo "Running 'make up' ..."
-read -p "Please enter your NGROK_AUTH_TOKEN: " NGROK_AUTH_TOKEN
-
-# Check if the input is not empty
-if [ -z "$NGROK_AUTH_TOKEN" ]; then
-  echo "Error: NGROK_AUTH_TOKEN cannot be empty."
-  exit 1
-fi
-
-# Append the token to the .env file
-echo "NGROK_AUTH_TOKEN=$NGROK_AUTH_TOKEN" >> .env
-echo "NGROK_AUTH_TOKEN has been saved to .env."
-
-# Run the 'make up' command
-make up
-
-########################################
-# 7. Start Bitnami OpenLDAP
-########################################
-# Move up two directories again, then into $HOME/Omero-DataPortal
-cd ..
-echo "Creating OIDC network (if it doesn't exist) and starting Bitnami OpenLDAP..."
-
 # Spin up the service in detached mode using your second file
-docker compose -f "$YAML_FILE2" up -d
+docker compose -f docker-compose.yaml up -d
 
 echo "OpenLDAP is now starting. Run 'docker compose logs -f' or 'docker ps' to verify."

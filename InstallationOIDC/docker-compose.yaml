@@ -1,0 +1,94 @@
+version: '3.8'
+
+services:
+  # --------------------------
+  # OPENLDAP
+  # --------------------------
+  openldap:
+    image: bitnami/openldap:latest
+    container_name: openldap
+    restart: unless-stopped
+    ports:
+      - "389:389"    # LDAP port
+      - "636:636"    # LDAPS port
+    environment:
+      - LDAP_ROOT=dc=example,dc=com
+      - LDAP_ADMIN_USERNAME=admin
+      - LDAP_ADMIN_PASSWORD=adminpassword
+      - LDAP_CONFIG_ADMIN_ENABLED=yes
+      - LDAP_CONFIG_ADMIN_PASSWORD=configpassword
+    volumes:
+      - ./ldap_data:/bitnami/openldap
+    networks:
+      - OIDC
+
+  # --------------------------
+  # POSTGRES
+  # --------------------------
+  postgres:
+    image: postgres:14
+    container_name: keycloak-postgres
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U keycloak"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - OIDC
+
+  # --------------------------
+  # KEYCLOAK
+  # --------------------------
+  keycloak:
+    build:
+      context: .
+      dockerfile: keycloak.dev.Dockerfile
+    container_name: keycloak
+    environment:
+      # Database connection
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: password
+
+      # Keycloak admin credentials
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+
+      # Additional Keycloak settings
+      KC_PROXY_HEADERS: xforwarded
+      KC_HTTP_ENABLED: "true"
+      KC_HOSTNAME_STRICT: "false"
+
+      # Enable script-based authenticators (Keycloak 19+):
+      KC_FEATURES: "scripts"
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      # Mount your realm config so Keycloak can auto-import
+      - ./realm-config:/opt/keycloak/data/import
+    command: 
+      - start-dev
+      - --import-realm
+    networks:
+      - OIDC
+# --------------------------
+# NAMED VOLUMES
+# --------------------------
+volumes:
+  postgres_data:
+
+# --------------------------
+# NETWORKS
+# --------------------------
+networks:
+  OIDC:
