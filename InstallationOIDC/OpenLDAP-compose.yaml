@@ -1,9 +1,3 @@
-
-networks:
-  # Referencing an already-created external network
-  OIDC:
-    external: true
-
 services:
   openldap:
     image: bitnami/openldap:latest
@@ -37,3 +31,7 @@ services:
 
     networks:
       - OIDC
+
+networks:
+  OIDC:
+    external: true
