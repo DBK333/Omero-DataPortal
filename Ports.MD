@@ -59,14 +59,6 @@
 
 ---
 
-## ngrok
-
-| Protocol | Port Range   | Purpose                         |
-|----------|--------------|---------------------------------|
-| TCP      | 4040         | ngrok Web Interface (HTTP)      |
-
----
-
 ## OpenLDAP
 
 | Protocol | Port Range   | Purpose                         |

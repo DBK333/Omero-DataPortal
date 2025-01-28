@@ -26,12 +26,13 @@ sudo ufw allow 4040/tcp
 git clone https://github.com/varshithmee/redmane-auth/ || true
 
 # Adjust this path as needed if you already have the repo
+cd redmane-auth
 cd keycloak-dev
 
 ########################################
 # 3. Paths to compose files
 ########################################
-YAML_FILE="$HOME/redmane-suth/docker-compose.yml"  # main docker-compose file
+YAML_FILE="$HOME/Omero-DataPortal/redmane-suth/docker-compose.yml"  # main docker-compose file
 YAML_FILE2="$HOME/Omero-DataPortal/OIDCSetup.sh"    # second file (treated as compose YAML)
 
 # Check if the main docker-compose.yml exists
@@ -66,7 +67,6 @@ make up
 ########################################
 # Move up two directories again, then into $HOME/Omero-DataPortal
 cd ..
-
 echo "Creating OIDC network (if it doesn't exist) and starting Bitnami OpenLDAP..."
 
 # Spin up the service in detached mode using your second file
