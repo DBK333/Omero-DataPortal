@@ -67,7 +67,30 @@
       }
     ],
   
-    "components": [
+"components": {
+    "org.keycloak.storage.UserStorageProvider": [
+      {
+        "id": "openldap-writable",
+        "name": "OpenLDAP-Writable",
+        "providerId": "ldap",
+        "providerType": "org.keycloak.storage.UserStorageProvider",
+        "parentId": "myrealm",
+
+        "config": {
+          "priority": [ "0" ],
+          "importEnabled": [ "true" ],
+          "syncRegistrations": [ "true" ],
+          "connectionUrl": [ "ldap://openldap:389" ],
+          "bindDn": [ "cn=admin,dc=example,dc=com" ],
+          "bindCredential": [ "adminpassword" ],
+          "usersDn": [ "ou=users,dc=example,dc=com" ],
+          "editMode": [ "WRITABLE" ],
+          "vendor": [ "other" ]
+        }
+      }
+    ],
+
+    "org.keycloak.authentication.Authenticator": [
       {
         "id": "set-random-pwd-script-authenticator",
         "name": "SetRandomPasswordScript",
@@ -75,9 +98,10 @@
         "providerType": "org.keycloak.authentication.Authenticator",
         "parentId": "myrealm",
         "config": {
-          "scriptCode": "var RandomString = Java.type(\"org.keycloak.common.util.RandomString\");\nvar PasswordCredentialModel = Java.type(\"org.keycloak.models.credential.PasswordCredentialModel\");\n\nfunction authenticate(context) {\n    var user = context.getUser();\n    if (!user) {\n        context.attempted();\n        return;\n    }\n\n    var randomPassword = RandomString.randomCode(12); // 12 char random pwd\n    var credential = PasswordCredentialModel.createFromValues(randomPassword, false);\n\n    session.userCredentialManager().updateCredential(realm, user, credential);\n\n    //print(\"Assigned random LDAP password: \" + randomPassword);\n    context.success();\n}\n\nfunction action(context) {\n}\n\nfunction requiresUser() {\n    return true;\n}\n\nfunction configuredFor(context, user) {\n    return false;\n}\n\nfunction setRequiredActions(context, user) {\n}\n\nfunction close() {\n}\n"
+          "scriptCode": "var RandomString = Java.type(\"org.keycloak.common.util.RandomString\");\\nvar PasswordCredentialModel = Java.type(\"org.keycloak.models.credential.PasswordCredentialModel\");\\n\\nfunction authenticate(context) {\\n    var user = context.getUser();\\n    if (!user) {\\n        context.attempted();\\n        return;\\n    }\\n    var randomPassword = RandomString.randomCode(12); // 12 char random pwd\\n    var credential = PasswordCredentialModel.createFromValues(randomPassword, false);\\n\\n    session.userCredentialManager().updateCredential(realm, user, credential);\\n    // print(\"Assigned random LDAP password: \" + randomPassword);\\n\\n    context.success();\\n}\\n\\nfunction action(context) {}\\nfunction requiresUser() { return true; }\\nfunction configuredFor(context, user) { return false; }\\nfunction setRequiredActions(context, user) {}\\nfunction close() {}"
         }
       }
     ]
+  }
   }
   
