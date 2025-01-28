@@ -12,6 +12,49 @@ echo "Installing make (if not already installed) and opening firewall ports..."
 sudo apt-get update -y
 sudo apt-get install -y make
 
+#install docker
+if ! command -v docker &>/dev/null; then
+  echo "Installing Docker prerequisites..."
+  sudo apt-get install -y \
+      ca-certificates \
+      curl \
+      gnupg \
+      lsb-release
+
+  echo "Adding Docker’s official GPG key..."
+  curl -fsSL https://download.docker.com/linux/ubuntu/gpg \
+    | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
+  echo "Setting up Docker repository..."
+  echo \
+    "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] \
+    https://download.docker.com/linux/ubuntu \
+    $(lsb_release -cs) stable" \
+    | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+  echo "Installing Docker Engine..."
+  sudo apt-get update
+  sudo apt-get install -y docker-ce docker-ce-cli containerd.io
+
+  echo "Verifying Docker installation..."
+  docker --version
+else
+  echo "Docker is already installed. Skipping..."
+fi
+
+if ! command -v docker-compose &>/dev/null; then
+  echo "Installing Docker Compose..."
+  sudo curl -L \
+    "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" \
+    -o /usr/local/bin/docker-compose
+  sudo chmod +x /usr/local/bin/docker-compose
+
+  echo "Verifying Docker Compose installation..."
+  docker-compose --version
+else
+  echo "Docker Compose is already installed. Skipping..."
+fi
+
 # Allow needed ports via ufw
 sudo ufw allow 389/tcp
 sudo ufw allow 636/tcp
@@ -27,13 +70,12 @@ git clone https://github.com/varshithmee/redmane-auth/ || true
 
 # Adjust this path as needed if you already have the repo
 cd redmane-auth
-cd keycloak-dev
 
 ########################################
 # 3. Paths to compose files
 ########################################
-YAML_FILE="$HOME/Omero-DataPortal/redmane-suth/docker-compose.yml"  # main docker-compose file
-YAML_FILE2="$HOME/Omero-DataPortal/OIDCSetup.sh"    # second file (treated as compose YAML)
+YAML_FILE="docker-compose.yaml"  # main docker-compose file
+YAML_FILE2="OIDCSetup.sh"    # second file (treated as compose YAML)
 
 # Check if the main docker-compose.yml exists
 if [[ ! -f "$YAML_FILE" ]]; then
@@ -59,7 +101,21 @@ docker network create OIDC || true
 ########################################
 # 6. Run 'make up'
 ########################################
+# Prompt the user for the NGROK_AUTH_TOKEN
 echo "Running 'make up' ..."
+read -p "Please enter your NGROK_AUTH_TOKEN: " NGROK_AUTH_TOKEN
+
+# Check if the input is not empty
+if [ -z "$NGROK_AUTH_TOKEN" ]; then
+  echo "Error: NGROK_AUTH_TOKEN cannot be empty."
+  exit 1
+fi
+
+# Append the token to the .env file
+echo "NGROK_AUTH_TOKEN=$NGROK_AUTH_TOKEN" >> .env
+echo "NGROK_AUTH_TOKEN has been saved to .env."
+
+# Run the 'make up' command
 make up
 
 ########################################
