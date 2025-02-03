@@ -1,10 +1,10 @@
-FROM quay.io/keycloak/keycloak:26.1 
+# keycloak-26.1.Dockerfile
+FROM quay.io/keycloak/keycloak:26.1
 
-# Optionally install any custom providers or do other config steps
+# (Optional) Add any custom files or configurations here.
+# For example, if you need to copy scripts or configuration files:
+# COPY ./my-config /opt/keycloak/my-config
 
-# If you want to pre-load scripts into a specific folder:
-# COPY realm-config/scripts /opt/keycloak/scripts
-
-# By default:
-# * We'll run Keycloak with dev profile
-# * We'll rely on the environment variable KC_FEATURES=scripts to enable script-based auth.
+# Use the built-in startup script with start-dev and our desired flags.
+ENTRYPOINT ["/opt/keycloak/bin/kc.sh"]
+CMD ["start-dev", "--spi-login-protocol-openid-connect-default-client-ssl-required=none", "--import-realm"]
