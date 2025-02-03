@@ -75,7 +75,7 @@ cd ~/auth-stack
 echo "=============================="
 echo "Starting Docker Compose stack..."
 echo "=============================="
-docker-compose -f docker-compose.yaml up -d
+sudo docker-compose -f /home/ubuntu/Omero-DataPortal/InstallationOIDC/docker-compose.yaml up -d
 
 echo "Setup complete!"
 echo "Check container status with: docker-compose ps"
