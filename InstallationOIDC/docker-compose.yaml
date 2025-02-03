@@ -65,6 +65,11 @@ services:
       KC_PROXY_HEADERS: xforwarded
       KC_HTTP_ENABLED: "true"
       KC_HOSTNAME_STRICT: "false"
+
+
+      KC_PROXY: "edge"
+      KC_HOSTNAME: "localhost"
+      KC_HOSTNAME_STRICT_HTTPS: "false"
     ports:
       - "8080:8080"
     depends_on:
