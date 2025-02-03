@@ -9,8 +9,8 @@ services:
     container_name: openldap
     restart: unless-stopped
     ports:
-      - "1389:1389"    # LDAP port
-      - "1636:1636"    # LDAPS port
+      - "389:1389"    # LDAP port
+      - "636:1636"    # LDAPS port
     environment:
       - LDAP_ROOT: dc=example,dc=com
       - LDAP_ADMIN_USERNAME: admin
