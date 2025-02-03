@@ -9,14 +9,14 @@ services:
     container_name: openldap
     restart: unless-stopped
     ports:
-      - "389:389"    # LDAP port
-      - "636:636"    # LDAPS port
+      - "1389:1389"    # LDAP port
+      - "1636:1636"    # LDAPS port
     environment:
-      LDAP_ROOT: dc=example,dc=com
-      LDAP_ADMIN_USERNAME: admin
-      LDAP_ADMIN_PASSWORD: adminpassword
-      LDAP_CONFIG_ADMIN_ENABLED: "yes"
-      LDAP_CONFIG_ADMIN_PASSWORD: configpassword
+      - LDAP_ROOT: dc=example,dc=com
+      - LDAP_ADMIN_USERNAME: admin
+      - LDAP_ADMIN_PASSWORD: adminpassword
+      - LDAP_CONFIG_ADMIN_ENABLED: "yes"
+      - LDAP_CONFIG_ADMIN_PASSWORD: configpassword
     volumes:
       - openldap_data:/bitnami/openldap
     networks:
