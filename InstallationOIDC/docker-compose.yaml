@@ -71,6 +71,7 @@ services:
       postgres:
         condition: service_healthy
     volumes:
+      # Mount your realm config so Keycloak can auto-import
       - ./realm-config:/opt/keycloak/data/import
     command: 
       - start-dev
