@@ -36,8 +36,7 @@
 
 | Protocol | Port Range   | Purpose                         |
 |----------|--------------|---------------------------------|
-| TCP      | 4063         | Omero Web Service               |
-| TCP      | 4064         | Omero Gateway                   |
+| TCP      | 4080         | Omero Web Service               |
 
 ---
 
@@ -45,8 +44,8 @@
 
 | Protocol | Port Range   | Purpose                         |
 |----------|--------------|---------------------------------|
-| TCP      | 4061         | Omero Server (binary data transfer) |
-| TCP      | 4062         | Omero Server (secondary data port) |
+| TCP      | 4063         | Omero Server (binary data transfer) |
+| TCP      | 4064         | Omero Server (secondary data port) |
 
 ---
 
