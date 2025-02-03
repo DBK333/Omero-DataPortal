@@ -82,5 +82,8 @@ else
   echo "Docker Compose is already installed. Skipping..."
 fi
 
-docker compose -f docker-compose.yaml up -d
 ##########
+
+docker compose -f docker-compose.yaml up -d
+
+echo "OpenLDAP is now starting. Run 'docker compose logs -f' or 'docker ps' to verify."
