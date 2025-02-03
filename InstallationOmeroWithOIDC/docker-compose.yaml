@@ -1,0 +1,183 @@
+version: "3.8"
+
+services:
+  #################################################################
+  # 1) OMERO DATABASE (PostgreSQL for OMERO)
+  #################################################################
+  database:
+    image: postgres:14
+    container_name: omero-postgres
+    environment:
+      POSTGRES_USER: omero
+      POSTGRES_DB: omero
+      POSTGRES_PASSWORD: omero
+    networks:
+      - omero
+    volumes:
+      - database:/var/lib/postgresql/data
+
+  #################################################################
+  # 2) OMERO SERVER
+  #################################################################
+  omeroserver:
+    image: openmicroscopy/omero-server:5
+    container_name: omero-server
+    environment:
+      # Database settings
+      CONFIG_omero_db_host: database
+      CONFIG_omero_db_user: omero
+      CONFIG_omero_db_pass: omero
+      CONFIG_omero_db_name: omero
+
+      # Enable and configure LDAP (point to openldap container below)
+      CONFIG_omero_ldap_config: "true"
+      CONFIG_omero_ldap_urls: "ldap://openldap:1389"   # Adjust if you use a different port
+      CONFIG_omero_ldap_base: "dc=example,dc=com"
+      CONFIG_omero_ldap_group__filter: "(objectClass=groupOfUniqueNames)"
+      CONFIG_omero_ldap_group__mapping: "name=cn"
+      CONFIG_omero_ldap_new__user__group: ":query:(uniqueMember=@{dn})"
+      CONFIG_omero_ldap_new__user__group_owner: "(owner=@{dn})"
+      CONFIG_omero_ldap_password: "adminpassword"      # Matches openldap admin credentials (if needed)
+      CONFIG_omero_ldap_sync__on__login: "true"
+      CONFIG_omero_ldap_user__filter: "(objectClass=person)"
+      CONFIG_omero_ldap_user__mapping: "omeName=uid,firstName=givenName,lastName=sn,email"
+      CONFIG_omero_ldap_username: "cn=admin,dc=example,dc=com"  # or "uid=admin,ou=Users,dc=example,dc=com"
+      
+      ROOTPASS: omero
+    networks:
+      - omero
+    ports:
+      - "4063:4063"
+      - "4064:4064"
+    volumes:
+      - omero:/OMERO
+    ulimits:
+      nofile:
+        soft: 8192
+        hard: 65536
+
+  #################################################################
+  # 3) OMERO WEB
+  #################################################################
+  omeroweb:
+    image: openmicroscopy/omero-web-standalone:5
+    container_name: omero-web
+    environment:
+      OMEROHOST: omeroserver
+    networks:
+      - omero
+    ports:
+      - "4080:4080"
+
+  #################################################################
+  # 4) OPENLDAP (Bitnami)
+  #################################################################
+  openldap:
+    image: bitnami/openldap:latest
+    container_name: openldap
+    restart: unless-stopped
+    # By default, the Bitnami image listens inside the container on port 1389
+    # We'll map host port 389 -> container port 1389
+    ports:
+      - "389:1389"
+    environment:
+      LDAP_ROOT: dc=example,dc=com
+      LDAP_ADMIN_USERNAME: admin
+      LDAP_ADMIN_PASSWORD: adminpassword
+      LDAP_CONFIG_ADMIN_ENABLED: "yes"
+      LDAP_CONFIG_ADMIN_PASSWORD: configpassword
+      LDAP_ENABLE_TLS: "no"   # Adjust if you want TLS
+    volumes:
+      - openldap_data:/bitnami/openldap
+    networks:
+      - omero
+
+  #################################################################
+  # 5) KEYCLOAK DATABASE (PostgreSQL for Keycloak)
+  #################################################################
+  keycloak-postgres:
+    image: postgres:14
+    container_name: keycloak-postgres
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U keycloak"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - omero
+
+  #################################################################
+  # 6) KEYCLOAK
+  #################################################################
+  keycloak:
+    build:
+      context: .
+      dockerfile: keycloak.dev.Dockerfile
+    container_name: keycloak
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://keycloak-postgres:5432/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: password
+
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+
+      KC_PROXY_HEADERS: xforwarded
+      KC_HTTP_ENABLED: "true"
+      KC_HOSTNAME_STRICT: "false"
+
+      # Enable health and metrics
+      KC_HEALTH_ENABLED: "true"
+      KC_METRICS_ENABLED: "true"
+
+    depends_on:
+      keycloak-postgres:
+        condition: service_healthy
+    volumes:
+      - ./realm-config:/opt/keycloak/data/import
+    command: 
+      - start-dev
+      - --import-realm
+    networks:
+      - omero
+    ports:
+      # If you want Keycloak accessible on host port 8080, for instance:
+      - "8080:8080"
+
+  #################################################################
+  # 7) NGROK (Optional)
+  #################################################################
+  ngrok:
+    image: ngrok/ngrok:latest
+    container_name: ngrok
+    environment:
+      - NGROK_AUTHTOKEN=${NGROK_AUTH_TOKEN}
+    command: http keycloak:8080
+    ports:
+      - "4040:4040"
+    depends_on:
+      - keycloak
+    networks:
+      - omero
+
+###################################################################
+# NETWORKS
+###################################################################
+networks:
+  omero:
+
+###################################################################
+# VOLUMES
+###################################################################
+volumes:
+  database:
+  omero:
+  openldap_data:
+  postgres_data:
