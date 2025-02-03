@@ -1,48 +1,56 @@
 #!/usr/bin/env bash
+
+# Exit on any error
 set -e
 
-echo "=============================="
-echo "Updating system packages..."
-echo "=============================="
-sudo apt-get update -y && sudo apt-get upgrade -y
+########################################
+# 1. Install make (if needed) & open firewall ports
+########################################
+echo "Installing make (if not already installed) and opening firewall ports..."
 
-echo "=============================="
-echo "Installing required packages..."
-echo "=============================="
-sudo apt-get install -y make curl gnupg lsb-release ufw
+# Update apt cache and install 'make'
+sudo apt-get update -y
+sudo apt-get install -y make
 
-echo "=============================="
-echo "Checking Docker installation..."
-echo "=============================="
+#install docker
 if ! command -v docker &>/dev/null; then
-  echo "Docker not found. Installing Docker..."
-  sudo apt-get install -y ca-certificates curl gnupg lsb-release
+  echo "Installing Docker prerequisites..."
+  sudo apt-get install -y \
+      ca-certificates \
+      curl \
+      gnupg \
+      lsb-release
+
   echo "Adding Docker’s official GPG key..."
   curl -fsSL https://download.docker.com/linux/ubuntu/gpg \
     | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 
   echo "Setting up Docker repository..."
-  echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] \
-https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" \
+  echo \
+    "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] \
+    https://download.docker.com/linux/ubuntu \
+    $(lsb_release -cs) stable" \
     | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
+  echo "Installing Docker Engine..."
   sudo apt-get update
-  echo "Installing Docker..."
   sudo apt-get install -y docker-ce docker-ce-cli containerd.io
-  echo "Docker version:" $(docker --version)
+
+  echo "Verifying Docker installation..."
+  docker --version
 else
-  echo "Docker is already installed."
+  echo "Docker is already installed. Skipping..."
 fi
 
-echo "=============================="
-echo "Checking Docker Compose installation..."
-echo "=============================="
 if ! command -v docker-compose &>/dev/null; then
-  echo "Docker Compose not found. Installing Docker Compose..."
-  sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" \
+  echo "Installing Docker Compose..."
+  sudo curl -L \
+    "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" \
     -o /usr/local/bin/docker-compose
   sudo chmod +x /usr/local/bin/docker-compose
-  echo "Docker Compose version:" $(docker-compose --version)
+
+  echo "Verifying Docker Compose installation..."
+  docker-compose --version
 else
   echo "Docker Compose is already installed."
 fi
@@ -75,8 +83,6 @@ cd ~/auth-stack
 echo "=============================="
 echo "Starting Docker Compose stack..."
 echo "=============================="
-sudo docker-compose -f /home/ubuntu/Omero-DataPortal/InstallationOIDC/docker-compose.yaml up -d
+docker-compose -f docker-compose.yaml up -d
 
-echo "Setup complete!"
-echo "Check container status with: docker-compose ps"
-echo "View logs with: docker-compose logs -f"
+echo "OpenLDAP is now starting. Run 'docker compose logs -f' or 'docker ps' to verify."
