@@ -52,37 +52,20 @@ if ! command -v docker-compose &>/dev/null; then
   echo "Verifying Docker Compose installation..."
   docker-compose --version
 else
-  echo "Docker Compose is already installed."
+  echo "Docker Compose is already installed. Skipping..."
 fi
 
-echo "=============================="
-echo "Configuring UFW firewall..."
-echo "=============================="
-sudo ufw allow OpenSSH
-sudo ufw allow 80/tcp      # HTTP (needed for Traefik & Let's Encrypt challenge)
-sudo ufw allow 443/tcp     # HTTPS
-sudo ufw allow 389/tcp     # LDAP (non-TLS)
-sudo ufw allow 636/tcp     # LDAPS (TLS)
-sudo ufw allow 8080/tcp    # Keycloak (if accessing directly for testing)
-sudo ufw allow 8443/tcp    # Optionally, Keycloak native TLS port if used
-sudo ufw allow 4040/tcp    # (Optional: e.g. for a dashboard)
-sudo ufw --force enable
+# Allow needed ports via ufw
+sudo ufw allow 389/tcp
+sudo ufw allow 636/tcp
+sudo ufw allow 8080/tcp
+sudo ufw allow 8443/tcp
+sudo ufw allow 4040/tcp
 
-echo "=============================="
-echo "Creating necessary directories..."
-echo "=============================="
-# These directories will hold Traefik's certs and any Keycloak realm import files.
-mkdir -p ~/auth-stack/letsencrypt
-mkdir -p ~/auth-stack/realm-config
-
-echo "=============================="
-echo "Changing to project directory: ~/auth-stack"
-echo "=============================="
-cd ~/auth-stack
-
-echo "=============================="
-echo "Starting Docker Compose stack..."
-echo "=============================="
-docker-compose -f docker-compose.yaml up -d
+########################################
+# 2. Start docker compose
+########################################
+# Spin up the service in detached mode using your second file
+docker compose -f docker-compose.yaml up -d
 
 echo "OpenLDAP is now starting. Run 'docker compose logs -f' or 'docker ps' to verify."
