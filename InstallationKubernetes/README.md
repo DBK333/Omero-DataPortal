@@ -1,109 +1,62 @@
-# Omero DataPortal Installation Guide
+# Omero DataPortal Installation Guideline
 
-This guide provides step-by-step instructions for setting up the Omero DataPortal with Kubernetes on your instance.
+This guideline provides an overview of the steps required to set up the Omero DataPortal with Kubernetes on your instance. These instructions serve as a high-level reference for further development.
+
+---
 
 ## Prerequisites
 
-1. **SSH Access**: Ensure you have SSH access to your instance.
-2. **Authentication File**: Download the required `.pem` file for authentication.
-3. **Tools Installation**: Install the following tools if they are not already installed:
-   - `git`
-   - `docker`
-   - `kubectl`
+Ensure the following prerequisites are met before proceeding with the installation:
+
+1. **SSH Access**: Verify that you can connect to your instance via SSH.
+2. **Authentication File**: Obtain the necessary authentication file (.pem) for secure access.
+3. **Required Tools**: Confirm that the following tools are installed on your system:
+   - Git
+   - Docker
+   - Kubectl
 
 ---
 
 ## Installation Steps
 
-### Step 1: SSH into the Instance
+### Step 1: Access the Instance
 
-Access your instance using the following command:
-
-```bash
-ssh -i ~/path_to_your_key_file.pem ubuntu@<instance-ip-address>
-```
-
-Replace `~/path_to_your_key_file.pem` with the path to your `.pem` file and `<instance-ip-address>` with your instance’s IP address.
+Use SSH to connect to your instance using the authentication file and instance credentials.
 
 ### Step 2: Clone the Repository
 
-Download the Omero DataPortal repository from GitHub:
+Download the Omero DataPortal repository from the official source and navigate to the installation directory. Ensure that necessary permissions are set for installation scripts.
 
-```bash
-git clone https://github.com/DBK333/Omero-DataPortal
-cd Omero-DataPortal/Installation\ and\ Config/
-chmod +x install-script.sh k8s-deploy.sh k8s-init-master.sh k8s-worker-node.sh
-```
+### Step 3: Execute the Installation Script
 
-### Step 3: Run the Installation Script
-
-Execute the installation script:
-
-```bash
-./install-script.sh
-```
-
-If the process stops with the following message:
-
-```bash
-Executing: /lib/systemd/systemd-sysv-install enable docker
-Docker group changes require a new session.
-Please run: 'exec su -l ubuntu' and then run this script again.
-```
-
-Follow these steps:
-
-1. Exit the SSH session:
-   ```bash
-   exit
-   ```
-2. Re-login to the instance:
-   ```bash
-   ssh -i ~/path_to_your_key_file.pem ubuntu@<instance-ip-address>
-   ```
-3. Navigate back to the installation directory and rerun the installation script:
-   ```bash
-   cd Omero-DataPortal/Installation\ and\ Config/
-   ./install-script.sh
-   ```
+Run the installation script to set up required dependencies. If prompted for additional steps, such as restarting the session or re-executing commands, follow the on-screen instructions.
 
 ### Step 4: Deploy Kubernetes
 
-Run the Kubernetes deployment script:
-
-```bash
-sudo ./k8s-deploy.sh
-```
+Initiate the Kubernetes deployment process by executing the relevant deployment script with appropriate privileges.
 
 ---
 
 ## Setting Up the Master Node
 
-1. Modify the `k8s-init-master.sh` file to specify the IP addresses of the master node:
-   ```bash
-   nano k8s-init-master.sh
-   ```
-2. Deploy Kubernetes on the master node:
-   ```bash
-   sudo ./k8s-init-master.sh
-   ```
+1. Modify the configuration file to specify the master node details.
+2. Execute the master node initialization script to set up the control plane for Kubernetes.
 
 ---
 
 ## Pairing Worker Nodes
 
-To connect worker nodes to the master node, follow the pairing instructions provided in the Kubernetes setup documentation.
+Follow the prescribed Kubernetes setup procedure to connect worker nodes to the master node, ensuring proper communication and configuration.
 
 ---
 
-## Port Details
+## Port Configuration
 
-For a detailed list of required ports, refer to the [Required Port for Deployments](https://github.com/DBK333/Omero-DataPortal/blob/main/Ports.md).
+Refer to the official documentation for a comprehensive list of required ports necessary for deployment and operation.
 
 ---
 
-## Notes
+## Additional Notes
 
-- Refer to the repository documentation for additional details.
-- For a list of required ports, consult the `ports.md` file included in the repository.
-
+- Review the repository documentation for further instructions and clarifications.
+- Consult the provided port configuration file for network and security settings.
