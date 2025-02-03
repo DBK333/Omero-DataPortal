@@ -1,6 +1,8 @@
 # Omero Data Portal
 
-Welcome to the **Omero Data Portal**! Use the navigation links below to get started.
+Welcome to the Omero Data Portal! Use the navigation links below to get started. The fully operational scripts include the installation of Omero with Docker Compose and OIDC. Meanwhile, the Omero installation with Kubernetes is currently a conceptual guideline for production-scale deployment.
+
+The OMERO with OIDC installation is still under development.
 
 ## Table of Contents
 
