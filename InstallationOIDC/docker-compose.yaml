@@ -75,7 +75,7 @@ services:
       - ./realm-config:/opt/keycloak/data/import
     networks:
       - oidc-network
-      
+
   ngrok:
     image: ngrok/ngrok:latest
     container_name: ngrok
@@ -86,7 +86,8 @@ services:
       - "4040:4040"
     depends_on:
       - keycloak
-
+    networks:      
+      - oidc-network
 volumes:
   openldap_data:
   postgres_data:
