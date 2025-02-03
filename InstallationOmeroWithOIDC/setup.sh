@@ -82,4 +82,5 @@ else
   echo "Docker Compose is already installed. Skipping..."
 fi
 
+docker compose -f docker-compose.yaml up -d
 ##########
