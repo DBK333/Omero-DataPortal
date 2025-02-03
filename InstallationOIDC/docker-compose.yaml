@@ -48,7 +48,7 @@ services:
   keycloak:
     build:
       context: .
-      dockerfile: keycloak-26.1.Dockerfile
+      dockerfile: keycloak.dev.Dockerfile
     container_name: keycloak
     environment:
       # Database connection:
