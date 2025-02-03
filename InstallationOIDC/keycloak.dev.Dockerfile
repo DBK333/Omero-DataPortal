@@ -1,4 +1,4 @@
-FROM quay.io/keycloak/keycloak:26.1
+FROM quay.io/keycloak/keycloak:latest 
 
 # Optionally install any custom providers or do other config steps
 
