@@ -10,7 +10,7 @@ services:
     restart: unless-stopped
     ports:
       - "389:1389"    # Non-secure LDAP port
-      - "636:1636"    # Secure LDAP (LDAPS) port
+      #- "636:1636"    # Secure LDAP (LDAPS) port
     environment:
       # Basic LDAP configuration
       LDAP_ROOT: dc=example,dc=com
@@ -18,16 +18,16 @@ services:
       LDAP_ADMIN_PASSWORD: adminpassword
       LDAP_CONFIG_ADMIN_ENABLED: "yes"
       LDAP_CONFIG_ADMIN_PASSWORD: configpassword
-      # Enable TLS/LDAPS
-      LDAP_ENABLE_TLS: "yes"
+      # Disable TLS/LDAPS
+      LDAP_ENABLE_TLS: "no"
       # Specify certificate paths (inside the container)
-      LDAP_TLS_CERT_FILE: /opt/bitnami/openldap/certs/ldap.crt
-      LDAP_TLS_KEY_FILE: /opt/bitnami/openldap/certs/ldap.key
-      LDAP_TLS_CA_FILE: /opt/bitnami/openldap/certs/ca.crt
+      #LDAP_TLS_CERT_FILE: /opt/bitnami/openldap/certs/ldap.crt
+      #LDAP_TLS_KEY_FILE: /opt/bitnami/openldap/certs/ldap.key
+      #LDAP_TLS_CA_FILE: /opt/bitnami/openldap/certs/ca.crt
     volumes:
       - openldap_data:/bitnami/openldap
       # Mount your local certificate directory to the container's cert directory
-      - /path/to/certs:/opt/bitnami/openldap/certs
+      #- /path/to/certs:/opt/bitnami/openldap/certs
     networks:
       - oidc-network
 
