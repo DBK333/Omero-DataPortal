@@ -1,9 +1,14 @@
-# keycloak-26.1.Dockerfile
-FROM quay.io/keycloak/keycloak:26.1
+FROM quay.io/keycloak/keycloak:latest
 
-# (Optional) Copy custom scripts or configurations here
-# COPY ./custom-scripts /opt/keycloak/custom-scripts
+# Enable health and metrics support
+ENV KC_HEALTH_ENABLED=true
+ENV KC_METRICS_ENABLED=true
 
-# Use the built-in startup script with desired flags.
+# Create directory for realm imports
+RUN mkdir -p /opt/keycloak/data/import
+
+# Expose the web port
+EXPOSE 8080
+
+# Set the entry point
 ENTRYPOINT ["/opt/keycloak/bin/kc.sh"]
-CMD ["start-dev", "--spi-login-protocol-openid-connect-default-client-ssl-required=none", "--import-realm"]
