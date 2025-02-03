@@ -65,10 +65,6 @@ services:
       KC_PROXY_HEADERS: xforwarded
       KC_HTTP_ENABLED: "true"
       KC_HOSTNAME_STRICT: "false"
-
-      # Enable script-based authenticators (Keycloak 19+):
-      KC_FEATURES: "scripts"
-      KC_SPI_SCRIPT_AUTHENTICATOR_DEFAULT_ENABLED: "true"
     ports:
       - "8080:8080"
     depends_on:
@@ -77,7 +73,6 @@ services:
     volumes:
       # Mount your realm config so Keycloak can auto-import
       - ./realm-config:/opt/keycloak/data/import
-      - ./realm-config/scripts:/opt/keycloak/scripts
     command: 
       - start-dev
       - --import-realm
