@@ -1,6 +1,6 @@
-# Authentication Flow Diagram
 
-```mermaid
+
+
 sequenceDiagram
    participant User
    participant Proxy
@@ -29,7 +29,7 @@ sequenceDiagram
        Web-->>User: Dashboard
    end
 
-   rect rgb(248, 250, 252)
+   rect rgb(240, 248, 255)
        Note over User,LDAP: Return Login Flow
        User->>Proxy: Access
        Proxy->>Web: Forward
