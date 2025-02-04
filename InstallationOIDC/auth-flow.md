@@ -10,7 +10,7 @@ sequenceDiagram
     participant Auth0
     participant LDAP
 
-    rect rgba(66, 135, 245, 0.1)
+    rect rgb(230, 240, 255)
         Note over User,LDAP: First Login
         User->>Proxy: Access OMERO
         Proxy->>Web: Forward
@@ -29,7 +29,7 @@ sequenceDiagram
         Web-->>User: Dashboard
     end
 
-    rect rgba(66, 135, 245, 0.05)
+    rect rgb(240, 245, 255)
         Note over User,LDAP: Return Login
         User->>Proxy: Access
         Proxy->>Web: Forward
@@ -43,12 +43,4 @@ sequenceDiagram
         Server-->>Web: Success
         Web-->>User: Access
     end
-
-    style User fill:#4287f5,stroke:#4287f5,color:#fff
-    style Proxy fill:#4287f5,stroke:#4287f5,color:#fff
-    style Web fill:#4287f5,stroke:#4287f5,color:#fff
-    style Server fill:#4287f5,stroke:#4287f5,color:#fff
-    style Keycloak fill:#4287f5,stroke:#4287f5,color:#fff
-    style Auth0 fill:#4287f5,stroke:#4287f5,color:#fff
-    style LDAP fill:#4287f5,stroke:#4287f5,color:#fff
 ```
