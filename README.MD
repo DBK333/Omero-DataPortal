@@ -33,7 +33,7 @@ If your instance is not yet set up, refer to the [NectarVM Documentation](https:
 
 ### 2. Security
 
-Make sure all necessary ports are open for proper communication. Refer to the [Security and Ports Configuration Guide](SECURITY.md) for detailed instructions on configuring your ports.
+Make sure all necessary ports are open for proper communication. Refer to the [Security and Ports Configuration Guide](https://github.com/DBK333/Omero-DataPortal/blob/main/SECURITY.MD) for detailed instructions on configuring your ports.
 
 ---
 
@@ -66,25 +66,31 @@ To install OMERO, there are three methods available: using Docker Compose, Kuber
 
 All prerequisites are covered in the [Prerequisites](#prerequisites) section, so no additional preparation steps are required beforehand.
 
-### Installation with Docker Compose
+### Installation OMERO with Docker Compose
 
-Follow the [Docker Compose Installation Guide](InstallationDockerCompose/README.md) to set up the Omero Data Portal using Docker Compose.
+Follow the [Docker Compose Installation Guide](https://github.com/DBK333/Omero-DataPortal/blob/main/InstallationDockerCompose) to set up the Omero Data Portal using Docker Compose.
 
-### Installation with Kubernetes
+### Installation OMERO with Kubernetes
 
-Follow the [Kubernetes Installation Guide](InstallationKubernetes/README.md) to set up the Omero Data Portal using Kubernetes.
+Follow the [Kubernetes Installation Guide](https://github.com/DBK333/Omero-DataPortal/tree/main/InstallationKubernetes) to set up the Omero Data Portal using Kubernetes.
 
-### Installation with OIDC
+### Installation with OIDC Components Only
 
 **Note:** You must install OMERO first before setting up OIDC.
 
-Follow the [OIDC for OMERO Installation Guide](InstallationOIDC/README.md) to integrate OpenID Connect authentication with the Omero Data Portal using Kubernetes.
+Follow the [OIDC for OMERO Installation Guide](https://github.com/DBK333/Omero-DataPortal/tree/main/InstallationOIDC) to integrate OpenID Connect authentication with the Omero Data Portal using Kubernetes.
+
+### Installation OMERO with OIDC
+
+**Note:** You must install OMERO first before setting up OIDC.
+
+Follow the [OIDC for OMERO Installation Guide](https://github.com/DBK333/Omero-DataPortal/tree/main/InstallationOmeroWithOIDC) to integrate OpenID Connect authentication with the Omero Data Portal using Docker Compose.
 
 ### OMERO Image Samples
 
 Explore various OMERO image samples to get started:
 
-- [Browse OMERO Samples](OmeroImageSamples/README.md)
+- [Browse OMERO Samples](https://github.com/DBK333/Omero-DataPortal/tree/main/OmeroImageSamples)
 
 ---
 
