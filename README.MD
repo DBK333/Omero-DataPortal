@@ -7,14 +7,15 @@ The OMERO with OIDC installation is still under development.
 ## Table of Contents
 
 - [Prerequisites](#prerequisites)
-  - [1. Running Instance](#1-running-instance)
-  - [2. Security](#2-security)
-  - [3. Security Groups (For Cloud Users)](#3-security-groups-for-cloud-users)
+  - [Running Instance](#running-instance)
+  - [Security](#security)
+  - [Security Groups (For Cloud Users)](#security-groups-for-cloud-users)
 - [Automated Package Installation](#automated-package-installation)
 - [Installation](#installation)
-  - [With Docker Compose](#installation-with-docker-compose)
-  - [With Kubernetes](#installation-with-kubernetes)
-  - [With OIDC](#installation-with-oidc)
+  - [Installation OMERO with Docker Compose](#installation-omero-with-docker-compose)
+  - [Installation OMERO with Kubernetes](#installation-omero-with-kubernetes)
+  - [Installation with OIDC Components Only](#installation-with-oidc-components-only)
+  - [Installation OMERO with OIDC](#installation-omero-with-oidc)
   - [OMERO Image Samples](#omero-image-samples)
 - [Contribution](#contribution)
 - [License](#license)
@@ -23,7 +24,7 @@ The OMERO with OIDC installation is still under development.
 
 ## Prerequisites
 
-### 1. Running Instance
+### Running Instance
 
 Ensure you have a **fully running instance** of **Ubuntu 22.04 LTS (Jammy)**.
 
@@ -31,13 +32,13 @@ If your instance is not yet set up, refer to the [NectarVM Documentation](https:
 
 ---
 
-### 2. Security
+### Security
 
-Make sure all necessary ports are open for proper communication. Refer to the [Security and Ports Configuration Guide](SECURITY.md) for detailed instructions on configuring your ports.
+Make sure all necessary ports are open for proper communication. Refer to the [Security and Ports Configuration Guide](https://github.com/DBK333/Omero-DataPortal/blob/main/SECURITY.MD) for detailed instructions on configuring your ports.
 
 ---
 
-### 3. Security Groups (For Cloud Users)
+### Security Groups (For Cloud Users)
 
 If you are using a cloud platform, it is recommended to create **separate security groups** for better management and security. Suggested security groups:
 
@@ -66,25 +67,29 @@ To install OMERO, there are three methods available: using Docker Compose, Kuber
 
 All prerequisites are covered in the [Prerequisites](#prerequisites) section, so no additional preparation steps are required beforehand.
 
-### Installation with Docker Compose
+### Installation OMERO with Docker Compose
 
-Follow the [Docker Compose Installation Guide](InstallationDockerCompose/README.md) to set up the Omero Data Portal using Docker Compose.
+Follow the [Docker Compose Installation Guide](https://github.com/DBK333/Omero-DataPortal/blob/main/InstallationDockerCompose) to set up the Omero Data Portal using Docker Compose.
 
-### Installation with Kubernetes
+### Installation OMERO with Kubernetes
 
-Follow the [Kubernetes Installation Guide](InstallationKubernetes/README.md) to set up the Omero Data Portal using Kubernetes.
+Follow the [Kubernetes Installation Guide](https://github.com/DBK333/Omero-DataPortal/tree/main/InstallationKubernetes) to set up the Omero Data Portal using Kubernetes.
 
-### Installation with OIDC
+### Installation with OIDC Components Only
+
+Follow the [OIDC for Component Only Installation Guide](https://github.com/DBK333/Omero-DataPortal/tree/main/InstallationOIDC) to integrate OpenID Connect authentication with the Omero Data Portal using Kubernetes.
+
+### Installation OMERO with OIDC
 
 **Note:** You must install OMERO first before setting up OIDC.
 
-Follow the [OIDC for OMERO Installation Guide](InstallationOIDC/README.md) to integrate OpenID Connect authentication with the Omero Data Portal using Kubernetes.
+Follow the [OMERO with OIDC Installation Guide](https://github.com/DBK333/Omero-DataPortal/tree/main/InstallationOmeroWithOIDC) to integrate OpenID Connect authentication with the Omero Data Portal using Docker Compose.
 
 ### OMERO Image Samples
 
 Explore various OMERO image samples to get started:
 
-- [Browse OMERO Samples](OmeroImageSamples/README.md)
+- [Browse OMERO Samples](https://github.com/DBK333/Omero-DataPortal/tree/main/OmeroImageSamples)
 
 ---
 
