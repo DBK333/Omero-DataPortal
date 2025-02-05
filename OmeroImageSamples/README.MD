@@ -117,3 +117,21 @@ This will open the processed images in **napari**, where you can interactively e
 - **Run the workflow**: `python main.py` to convert **CZI** files to **Zarr** and preprocess the images (deskew, deconvolve, downsample).
 - **View the images**: Visualize the processed images using **napari**.
 - **No configuration needed**: All settings are handled within `main.py`.
+
+---
+
+## **The dataset for WEHI internships can be found here: https://zenodo.org/records/14807502.**
+
+## **Reference**
+
+- Geoghegan, N.D., Evelyn, C., Whitehead, L.W. et al. 4D analysis of malaria parasite invasion offers insights into erythrocyte membrane remodeling and parasitophorous vacuole formation. Nat Commun 12, 3620 (2021). https://doi.org/10.1038/s41467-021-23626-7
+
+- Zenodo. (2022). Lattice Light-Sheet Microscopy Analysis Datasets. Zenodo. https://zenodo.org/records/7117784
+
+
+## **Citation**
+
+When using this dataset, please cite:
+Cindy Evelyn, Niall Geoghegan, Lachlan Whitehead, Pradeep Rajasekhar, & Kelly Rogers. (2022). Datasets for napari-lattice: Lattice Lightsheet Analysis (0.1) [Data set]. Zenodo. https://doi.org/10.5281/zenodo.7117784
+
+This dataset supports ongoing research in high-resolution microscopy and facilitates reproducible scientific analysis.
