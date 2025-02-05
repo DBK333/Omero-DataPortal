@@ -18,6 +18,7 @@ sudo ufw allow 4063/tcp
 sudo ufw allow 4064/tcp
 sudo ufw allow 4080/tcp
 
+
 #
 # 2. Install Docker Engine and Docker Compose if not present
 #
@@ -32,7 +33,7 @@ if ! command -v docker &>/dev/null; then
       gnupg \
       lsb-release
 
-  echo "Adding Docker's official GPG key..."
+  echo "Adding Docker’s official GPG key..."
   curl -fsSL https://download.docker.com/linux/ubuntu/gpg \
     | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 
@@ -76,8 +77,3 @@ if ! docker network ls | grep -q "$NETWORK_NAME"; then
 else
   echo "Network $NETWORK_NAME already exists."
 fi
-
-# Create data directory for OMERO uploads
-echo "Creating data directory for OMERO uploads..."
-mkdir -p ./data
-chmod 777 ./data
