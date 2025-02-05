@@ -132,6 +132,6 @@ This will open the processed images in **napari**, where you can interactively e
 ## **Citation**
 
 When using this dataset, please cite:
-Zenodo. (2022). Lattice Light-Sheet Microscopy Analysis Datasets. Zenodo. https://zenodo.org/records/7117784
+Cindy Evelyn, Niall Geoghegan, Lachlan Whitehead, Pradeep Rajasekhar, & Kelly Rogers. (2022). Datasets for napari-lattice: Lattice Lightsheet Analysis (0.1) [Data set]. Zenodo. https://doi.org/10.5281/zenodo.7117784
 
 This dataset supports ongoing research in high-resolution microscopy and facilitates reproducible scientific analysis.
