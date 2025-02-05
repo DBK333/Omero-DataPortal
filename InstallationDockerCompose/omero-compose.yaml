@@ -1,5 +1,4 @@
 services:
-
   database:
     image: "postgres:14"
     environment:
@@ -12,8 +11,6 @@ services:
       - "database:/var/lib/postgresql/data"
 
   omeroserver:
-    # This container uses the tag for the latest server release of OMERO 5
-    # To upgrade to the next major release, increment the major version number
     image: "openmicroscopy/omero-server:5"
     environment:
       CONFIG_omero_db_host: database
@@ -28,14 +25,13 @@ services:
       - "4064:4064"
     volumes:
       - "omero:/OMERO"
+      - "./data:/data"  # Mount point for data uploads
     ulimits:
       nofile:
         soft: 8192
         hard: 65536
 
   omeroweb:
-    # This container uses the tag for the latest web release of OMERO 5
-    # To upgrade to the next major release, increment the major version number
     image: "openmicroscopy/omero-web-standalone:5"
     environment:
       OMEROHOST: omeroserver
@@ -43,6 +39,19 @@ services:
       - omero
     ports:
       - "4080:4080"
+
+  # New CLI service for handling uploads
+  omerocli:
+    image: "openmicroscopy/omero-cli:latest"
+    networks:
+      - omero
+    volumes:
+      - "./data:/data"  # Shared volume with omeroserver for uploads
+    depends_on:
+      - omeroserver
+    # Keep container running
+    tty: true
+    stdin_open: true
 
 networks:
   omero:

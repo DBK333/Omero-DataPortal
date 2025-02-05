@@ -2,8 +2,6 @@
 
 To set up the project using Docker Compose, follow these steps:
 
----
-
 ## Step 1: Clone the Repositories and Run Setup Commands
 
 1. Clone the **Omero-DataPortal** repository:
@@ -17,7 +15,6 @@ To set up the project using Docker Compose, follow these steps:
     chmod +x OmeroWithComposerSetup.sh
     sudo ./OmeroWithComposerSetup.sh
     ```
----
 
 ## Step 2: Modify the `docker-compose.yml` File
 
@@ -35,8 +32,6 @@ To set up the project using Docker Compose, follow these steps:
 
    Replace `your_secure_password_here` with your desired password.
 
----
-
 ## Step 3: Start the Docker Services
 
 1. Pull the necessary Docker images:
@@ -49,14 +44,48 @@ To set up the project using Docker Compose, follow these steps:
     sudo docker compose -f omero-compose.yaml up -d
     ```
 
-4. Optionally, monitor the service logs:
+3. Optionally, monitor the service logs:
     ```bash
     sudo docker compose -f omero-compose.yaml logs -f
     ```
 
----
+## Step 4: Using OMERO CLI for Uploads
 
-## Step 4: Access the OMERO.web Interface
+1. Copy your data files to the upload directory:
+    ```bash
+    # From your local machine
+    scp /path/to/your/images/* ubuntu@<YOUR_SERVER_IP>:~/Omero-DataPortal/InstallationDockerCompose/data/
+    ```
+
+2. Use the OMERO CLI container for imports:
+    ```bash
+    # Login to OMERO
+    docker exec omerocli omero login -s omeroserver -p 4064 -u root -w omero
+
+    # Import files from the data directory
+    docker exec omerocli omero import /data/*.tif
+
+    # Create a dataset and import into it
+    docker exec omerocli omero obj new Dataset name=MyDataset
+    docker exec omerocli omero import -d MyDataset /data/*.tif
+    ```
+
+3. Common CLI commands:
+    ```bash
+    # List users
+    docker exec omerocli omero user list
+
+    # Check import status
+    docker exec omerocli omero fs list
+
+    # Create a new project
+    docker exec omerocli omero obj new Project name=MyProject
+
+    # Create a dataset in a project
+    docker exec omerocli omero obj new Dataset name=MyDataset project=MyProject
+    ```
+
+## Step 5: Access the OMERO.web Interface
 
 - **Local Access**: Open your browser and visit:
   ```
@@ -68,16 +97,19 @@ To set up the project using Docker Compose, follow these steps:
   http://<YOUR_SERVER_IP>:4080
   ```
 
----
-
 ## Notes:
 
-- **Username and Password**: If there is no change in password, use   **Username:** root and **Password:** omero.
-- **Logs**: Use the following command to troubleshoot any issues:
+- **Username and Password**: If there is no change in password, use **Username:** root and **Password:** omero
+- **Upload Directory**: The `./data` directory is shared between the host system and the OMERO containers
+- **Logs**: Use the following commands to troubleshoot any issues:
   ```bash
-  docker-compose logs -f
+  # All services
+  docker compose -f omero-compose.yaml logs -f
+
+  # Specific service
+  docker compose -f omero-compose.yaml logs -f omeroserver
+  docker compose -f omero-compose.yaml logs -f omerocli
   ```
 - **Documentation**: For more details, refer to the official project repositories:
   - [docker-example-omero Repository](https://github.com/ome/docker-example-omero)
-  - [Redmane Authentication Repository]
-  (https://github.com/varshithmee/redmane-auth/)
+  - [Redmane Authentication Repository](https://github.com/varshithmee/redmane-auth/)
