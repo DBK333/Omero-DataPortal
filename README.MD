@@ -91,6 +91,11 @@ Explore various OMERO image samples to get started:
 
 - [Browse OMERO Samples](https://github.com/DBK333/Omero-DataPortal/tree/main/OmeroImageSamples)
 
+### OMERO Data upload
+Method how to upload the data into Omero from your device
+
+- [Omero Data Upload](https://github.com/DBK333/Omero-DataPortal/blob/main/DATAUPLOAD.MD)
+
 ---
 
 ## Contribution
