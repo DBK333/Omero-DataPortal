@@ -12,13 +12,15 @@ The OMERO with OIDC installation is still under development.
   - [Security Groups (For Cloud Users)](#security-groups-for-cloud-users)
 - [Automated Package Installation](#automated-package-installation)
 - [Installation](#installation)
-  - [Installation OMERO with Docker Compose](#installation-omero-with-docker-compose)
-  - [Installation OMERO with Kubernetes](#installation-omero-with-kubernetes)
+  - [OMERO Installation with Docker Compose](#omero-installation-with-docker-compose)
+  - [OMERO Installation with Kubernetes](#omero-installation-with-kubernetes)
   - [Installation with OIDC Components Only](#installation-with-oidc-components-only)
-  - [Installation OMERO with OIDC](#installation-omero-with-oidc)
+  - [OMERO Installation with OIDC](#omero-installation-with-oidc)
   - [OMERO Image Samples](#omero-image-samples)
+- [OMERO Data Upload](#omero-data-upload)
 - [Contribution](#contribution)
 - [License](#license)
+- [References](#references)
 
 ---
 
@@ -67,11 +69,11 @@ To install OMERO, there are three methods available: using Docker Compose, Kuber
 
 All prerequisites are covered in the [Prerequisites](#prerequisites) section, so no additional preparation steps are required beforehand.
 
-### Installation OMERO with Docker Compose
+### OMERO Installation with Docker Compose
 
 Follow the [Docker Compose Installation Guide](https://github.com/DBK333/Omero-DataPortal/blob/main/InstallationDockerCompose) to set up the Omero Data Portal using Docker Compose.
 
-### Installation OMERO with Kubernetes
+### OMERO Installation with Kubernetes
 
 Follow the [Kubernetes Installation Guide](https://github.com/DBK333/Omero-DataPortal/tree/main/InstallationKubernetes) to set up the Omero Data Portal using Kubernetes.
 
@@ -79,7 +81,7 @@ Follow the [Kubernetes Installation Guide](https://github.com/DBK333/Omero-DataP
 
 Follow the [OIDC for Component Only Installation Guide](https://github.com/DBK333/Omero-DataPortal/tree/main/InstallationOIDC) to integrate OpenID Connect authentication with the Omero Data Portal using Kubernetes.
 
-### Installation OMERO with OIDC
+### OMERO Installation with OIDC
 
 **Note:** You must install OMERO first before setting up OIDC.
 
@@ -91,8 +93,13 @@ Explore various OMERO image samples to get started:
 
 - [Browse OMERO Samples](https://github.com/DBK333/Omero-DataPortal/tree/main/OmeroImageSamples)
 
-### OMERO Data upload
-Method how to upload the data into Omero from your device
+---
+
+## OMERO Data Upload
+
+### OMERO Data Upload
+
+Method on how to upload data into OMERO from your device:
 
 - [Omero Data Upload](https://github.com/DBK333/Omero-DataPortal/blob/main/DATAUPLOAD.MD)
 
@@ -112,3 +119,13 @@ Feel free to fork the repositories, submit issues, or create pull requests to he
 ## License
 
 This repository is licensed under the terms specified in the [LICENSE](LICENSE) file.
+
+---
+
+## References
+
+1. OMERO Project Documentation: https://www.openmicroscopy.org/omero/
+2. NectarVM Documentation: https://nectarvm.example.com/documentation
+3. Docker Example OMERO: https://github.com/ome/docker-example-omero
+4. Kubernetes OMERO: https://github.com/manics/kubernetes-omero
+5. Security Configuration Guide: https://github.com/DBK333/Omero-DataPortal/blob/main/SECURITY.MD
