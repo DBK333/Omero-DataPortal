@@ -10,6 +10,10 @@ We will integrate the following components:
 - **OpenLDAP** for being buffer to OMERO.
 - **Auth0** for main authentication.
 
+## Authentication Flow
+
+![Authentication Flow](authentication-flow.png)
+
 ## Installation Steps
 
 ### Step 1: Clone the Omero-DataPortal Repository
