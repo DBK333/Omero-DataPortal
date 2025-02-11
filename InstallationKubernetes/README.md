@@ -1,6 +1,6 @@
 # Omero DataPortal Installation Overview
 
-To deploy **Omero DataPortal** on **Kubernetes**, you need to set up a **Kubernetes cluster** consisting of a **Master Node** and at least one **Worker Node**. The **Omero** application will be deployed on the **Worker Node** using **Helm**. Below is a high-level installation guideline.
+To deploy **Omero DataPortal** on **Kubernetes**, you need to set up a **Kubernetes cluster** consisting of a **Master Node** and at least one **Worker Node**. The **Omero** application will be deployed on the **Worker Node** using **Helm**. Refer to [Security and Ports](https://github.com/DBK333/Omero-DataPortal/blob/main/SECURITY.MD) for detailed port configuration number. **For Nectar VM users:** Create a security group with the necessary ports open. The setup script only configures the firewall, not the security group. Below is a high-level installation guideline.
 
 ---
 
@@ -10,7 +10,7 @@ You need to configure at least **one Master Node** and **one or more Worker Node
 
 ### 1.1 Install Kubernetes on Ubuntu
 Refer to the **PhoenixNAP Kubernetes installation guide**:
-🔗 [Install Kubernetes on Ubuntu](https://phoenixnap.com/kb/install-kubernetes-on-ubuntu)
+[Install Kubernetes on Ubuntu](https://phoenixnap.com/kb/install-kubernetes-on-ubuntu)
 
 Steps include:
 - Installing required dependencies (`docker`, `kubeadm`, `kubectl`, `kubelet`).
@@ -31,7 +31,7 @@ Once your Kubernetes cluster is set up, deploy **Omero DataPortal** using Helm.
 
 ### 2.2 Deploy Omero using Helm
 - Use the Helm chart from the repository:
-  🔗 [GitHub: Kubernetes-Omero](https://github.com/manics/kubernetes-omero)
+[GitHub: Kubernetes-Omero](https://github.com/manics/kubernetes-omero)
 - Configure `values.yaml` with your environment settings.
 - Deploy Omero using:
   ```sh
@@ -51,12 +51,17 @@ Once your Kubernetes cluster is set up, deploy **Omero DataPortal** using Helm.
 
 ---
 
-## 4. References
+## 4. Additional Notes
+
+- A **partially working script** (`install-script.sh`) is available for installation automation. This script can help streamline the process but may require manual intervention for certain steps.
+- The script is designed to work on **Ubuntu 22.04 LTS (Jammy)**.
+
+---
+
+## 5. References
 
 - **PhoenixNAP Kubernetes Installation Guide**: [Install Kubernetes on Ubuntu](https://phoenixnap.com/kb/install-kubernetes-on-ubuntu)
 - **Kubernetes Official Documentation**: [kubernetes.io](https://kubernetes.io/docs/)
 - **Helm Official Documentation**: [helm.sh](https://helm.sh/docs/)
 - **Omero Kubernetes Helm Chart**: [GitHub: Kubernetes-Omero](https://github.com/manics/kubernetes-omero)
-
-This guide provides a high-level overview of the installation. Follow the linked resources for detailed steps. 🚀
 
