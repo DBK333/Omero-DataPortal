@@ -10,6 +10,16 @@ We will integrate the following components:
 - **OpenLDAP** for being buffer to OMERO.
 - **Auth0** for main authentication.
 
+### Prerequisites
+
+Ensure you have the following ports open:
+- Ngrok, OpenLDAP and Keycloak
+- Refer to [Security and Ports](https://github.com/DBK333/Omero-DataPortal/blob/main/SECURITY.MD) for detailed port configuration number.
+- **For Nectar VM users:** Create a security group with the necessary ports open. The setup script only configures the firewall, not the security group.
+
+Ensure you have the following:
+- An **NGROK account** (for authentication token)
+
 ## Authentication Flow
 
 ![Authentication Flow](authentication-flow.png)

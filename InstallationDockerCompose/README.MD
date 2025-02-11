@@ -1,6 +1,15 @@
 # Docker Compose Installation
 
-To set up the project using Docker Compose, follow these steps:
+To set up the project using Docker Compose in a server, follow these steps:
+
+---
+
+## Prerequisites
+
+Ensure you have the following ports open:
+- OMERO Web and Server
+- Refer to [Security and Ports](https://github.com/DBK333/Omero-DataPortal/blob/main/SECURITY.MD) for detailed port configuration numbers.
+- **For Nectar VM users:** Create a security group with the necessary ports open. The setup script only configures the firewall, not the security group.
 
 ---
 
@@ -17,6 +26,7 @@ To set up the project using Docker Compose, follow these steps:
     chmod +x OmeroWithComposerSetup.sh
     sudo ./OmeroWithComposerSetup.sh
     ```
+
 ---
 
 ## Step 2: Modify the `docker-compose.yml` File
@@ -41,17 +51,17 @@ To set up the project using Docker Compose, follow these steps:
 
 1. Pull the necessary Docker images:
     ```bash
-    sudo docker compose -f omero-compose.yaml pull
+    sudo docker compose -f omero-compose.yml pull
     ```
 
 2. Start the services in detached mode:
     ```bash
-    sudo docker compose -f omero-compose.yaml up -d
+    sudo docker compose -f omero-compose.yml up -d
     ```
 
-4. Optionally, monitor the service logs:
+3. Optionally, monitor the service logs:
     ```bash
-    sudo docker compose -f omero-compose.yaml logs -f
+    sudo docker compose -f omero-compose.yml logs -f
     ```
 
 ---
@@ -72,12 +82,25 @@ To set up the project using Docker Compose, follow these steps:
 
 ## Notes:
 
-- **Username and Password**: If there is no change in password, use   **Username:** root and **Password:** omero.
+- **Username and Password**: If the password remains unchanged, use:
+  - **Username:** root  
+  - **Password:** omero  
 - **Logs**: Use the following command to troubleshoot any issues:
   ```bash
-  docker-compose logs -f
+  sudo docker compose logs -f
   ```
 - **Documentation**: For more details, refer to the official project repositories:
   - [docker-example-omero Repository](https://github.com/ome/docker-example-omero)
-  - [Redmane Authentication Repository]
-  (https://github.com/varshithmee/redmane-auth/)
+  - [Redmane Authentication Repository](https://github.com/varshithmee/redmane-auth/)
+
+---
+
+## SSH Issues & Nectar VM Console
+
+If you experience SSH issues after logging out, it is recommended to use the **Nectar VM console** of the instance. Please refer to [Nectar VNC Console Setup](https://tutorials.rc.nectar.org.au/connecting/01-overview) for detailed instructions on accessing the console.
+
+---
+
+## Status
+
+This setup is fully functional and correctly configured.

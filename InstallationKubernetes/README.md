@@ -1,62 +1,62 @@
-# Omero DataPortal Installation Guideline
+# Omero DataPortal Installation Overview
 
-This guideline provides an overview of the steps required to set up the Omero DataPortal with Kubernetes on your instance. These instructions serve as a high-level reference for further development.
-
----
-
-## Prerequisites
-
-Ensure the following prerequisites are met before proceeding with the installation:
-
-1. **SSH Access**: Verify that you can connect to your instance via SSH.
-2. **Authentication File**: Obtain the necessary authentication file (.pem) for secure access.
-3. **Required Tools**: Confirm that the following tools are installed on your system:
-   - Git
-   - Docker
-   - Kubectl
+To deploy **Omero DataPortal** on **Kubernetes**, you need to set up a **Kubernetes cluster** consisting of a **Master Node** and at least one **Worker Node**. The **Omero** application will be deployed on the **Worker Node** using **Helm**. Below is a high-level installation guideline.
 
 ---
 
-## Installation Steps
+## 1. Set Up Kubernetes Cluster
 
-### Step 1: Access the Instance
+You need to configure at least **one Master Node** and **one or more Worker Nodes**. Follow these steps:
 
-Use SSH to connect to your instance using the authentication file and instance credentials.
+### 1.1 Install Kubernetes on Ubuntu
+Refer to the **PhoenixNAP Kubernetes installation guide**:
+🔗 [Install Kubernetes on Ubuntu](https://phoenixnap.com/kb/install-kubernetes-on-ubuntu)
 
-### Step 2: Clone the Repository
-
-Download the Omero DataPortal repository from the official source and navigate to the installation directory. Ensure that necessary permissions are set for installation scripts.
-
-### Step 3: Execute the Installation Script
-
-Run the installation script to set up required dependencies. If prompted for additional steps, such as restarting the session or re-executing commands, follow the on-screen instructions.
-
-### Step 4: Deploy Kubernetes
-
-Initiate the Kubernetes deployment process by executing the relevant deployment script with appropriate privileges.
+Steps include:
+- Installing required dependencies (`docker`, `kubeadm`, `kubectl`, `kubelet`).
+- Disabling swap for Kubernetes compatibility.
+- Initializing the Kubernetes cluster on the **Master Node** using `kubeadm init`.
+- Setting up networking using **Weave, Calico, or Flannel**.
+- Adding Worker Nodes to the cluster using the join token provided by `kubeadm`.
 
 ---
 
-## Setting Up the Master Node
+## 2. Deploy Omero DataPortal on Worker Node
 
-1. Modify the configuration file to specify the master node details.
-2. Execute the master node initialization script to set up the control plane for Kubernetes.
+Once your Kubernetes cluster is set up, deploy **Omero DataPortal** using Helm.
+
+### 2.1 Install Helm
+- Install **Helm**, the package manager for Kubernetes.
+- Verify installation with `helm version`.
+
+### 2.2 Deploy Omero using Helm
+- Use the Helm chart from the repository:
+  🔗 [GitHub: Kubernetes-Omero](https://github.com/manics/kubernetes-omero)
+- Configure `values.yaml` with your environment settings.
+- Deploy Omero using:
+  ```sh
+  helm install <release-name> <chart-path>
+  ```
 
 ---
 
-## Pairing Worker Nodes
+## 3. Verify and Access Omero DataPortal
 
-Follow the prescribed Kubernetes setup procedure to connect worker nodes to the master node, ensuring proper communication and configuration.
+- Check the status of the **Omero pods** and services using:
+  ```sh
+  kubectl get pods -n <namespace>
+  ```  
+- Expose the Omero service via **LoadBalancer or Ingress** for external access.
+- Access **Omero DataPortal** through the assigned IP or domain.
 
 ---
 
-## Port Configuration
+## 4. References
 
-Refer to the official documentation for a comprehensive list of required ports necessary for deployment and operation.
+- **PhoenixNAP Kubernetes Installation Guide**: [Install Kubernetes on Ubuntu](https://phoenixnap.com/kb/install-kubernetes-on-ubuntu)
+- **Kubernetes Official Documentation**: [kubernetes.io](https://kubernetes.io/docs/)
+- **Helm Official Documentation**: [helm.sh](https://helm.sh/docs/)
+- **Omero Kubernetes Helm Chart**: [GitHub: Kubernetes-Omero](https://github.com/manics/kubernetes-omero)
 
----
+This guide provides a high-level overview of the installation. Follow the linked resources for detailed steps. 🚀
 
-## Additional Notes
-
-- Review the repository documentation for further instructions and clarifications.
-- Consult the provided port configuration file for network and security settings.
