@@ -50,13 +50,6 @@ sudo docker exec -it installationdockercompose-omeroserver-1 /bin/bash
 
 ## 3. Access the OMERO Container and Log In
 
-### Format:
-```bash
-cd ~/OMERO.server-5.6.14-ice36/bin
-./omero login -s localhost -u root -w omero
-```
-
-### Example:
 ```bash
 cd
 cd OMERO.server-5.6.14-ice36/bin

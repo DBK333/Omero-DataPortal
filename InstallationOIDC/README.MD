@@ -7,18 +7,18 @@ This guide explains how to implement OIDC authentication for OMERO using Keycloa
 We will integrate the following components:
 
 - **Keycloak** for identity and access management.
-- **OpenLDAP** for being buffer to OMERO.
-- **Auth0** for main authentication.
+- **OpenLDAP** as a buffer to OMERO.
+- **Auth0** for primary authentication.
 
 ### Prerequisites
 
 Ensure you have the following ports open:
-- Ngrok, OpenLDAP and Keycloak
-- Refer to [Security and Ports](https://github.com/DBK333/Omero-DataPortal/blob/main/SECURITY.MD) for detailed port configuration number.
+- Ngrok, OpenLDAP, and Keycloak.
+- Refer to [Security and Ports](https://github.com/DBK333/Omero-DataPortal/blob/main/SECURITY.MD) for detailed port configurations.
 - **For Nectar VM users:** Create a security group with the necessary ports open. The setup script only configures the firewall, not the security group.
 
 Ensure you have the following:
-- An **NGROK account** (for authentication token)
+- An **NGROK account** (for authentication token).
 
 ## Authentication Flow
 
@@ -35,9 +35,9 @@ git clone https://github.com/DBK333/Omero-DataPortal
 cd Omero-DataPortal/InstallationOIDC/
 ```
 
-### Step 2: Retrieve NGROK_AUTH_TOKEN from the ngrok Dashboard
+### Step 2: Retrieve NGROK_AUTH_TOKEN from the Ngrok Dashboard
 
-1. Log in to the [ngrok dashboard](https://dashboard.ngrok.com/).
+1. Log in to the [Ngrok dashboard](https://dashboard.ngrok.com/).
 2. Navigate to **Getting Started > Your Auth Token**.
 3. Save the authentication token in the terminal:
 
@@ -58,12 +58,12 @@ sudo ./OIDCSetup.sh
 
 Follow the Auth0 documentation to configure authentication settings for OMERO.
 
-1. Sign up with your email address at [Auth0 Signup](https://auth0.com/signup?place=header&type=button&text=sign%20up).
+1. Sign up at [Auth0 Signup](https://auth0.com/signup?place=header&type=button&text=sign%20up).
 2. Log in to your Auth0 account.
-3. In the Auth0 dashboard, go to **User Management > Users** and create a few test user accounts.
+3. In the Auth0 dashboard, go to **User Management > Users** and create test user accounts.
 4. Create an application:
    - Navigate to **Applications > Create Application**.
-   - Enter a name for your test application and select **Regular Web Applications** as the application type.
+   - Enter a name for your test application and select **Regular Web Applications**.
 5. Configure application settings:
    - Go to the **Application URIs** section.
    - Set **Allowed Callback URLs** to:
@@ -74,7 +74,7 @@ Follow the Auth0 documentation to configure authentication settings for OMERO.
      ```
      https://[ngrok_url_here]/realms/MyRealm/broker/Auth0/endpoint/logout_response
      ```
-   - Alternatively, copy the **Redirect URL** from the **Keycloak Admin Dashboard > Identity Provider > Redirect URL** (refer to Step 5: Set up Keycloak, steps 1-4).
+   - Alternatively, copy the **Redirect URL** from **Keycloak Admin Dashboard > Identity Provider > Redirect URL**.
 6. Save the changes. Your Auth0 setup is now complete.
 
 ### Step 5: Set Up Keycloak
@@ -86,13 +86,13 @@ Follow the Auth0 documentation to configure authentication settings for OMERO.
    and save the file.
 2. Access the Keycloak UI:
    - From the dashboard, navigate to **Universal Gateway > Endpoints** and copy the generated link.
-3. Log in with the default credentials (assuming they were not changed):
+3. Log in with the default credentials:
    - **Username:** `admin`
    - **Password:** `admin`
 4. Go to **Identity Provider** and select **OpenID Connect v1.0**.
 5. Configure the connection:
    - Change **Alias** to `Auth0` and **Display Name** to `Auth0`.
-   - Disable **Use Discovery Endpoint** and upload the previously downloaded `.json` file (auto-filling most settings).
+   - Disable **Use Discovery Endpoint** and upload the previously downloaded `.json` file.
    - Copy and paste the **Client ID** and **Client Secret** from Auth0.
 6. Configure LDAP settings:
    - Set **Connection URL** to `ldap://openldap:1389`.
@@ -100,10 +100,10 @@ Follow the Auth0 documentation to configure authentication settings for OMERO.
    - Enter:
      - **Bind DN:** `cn=admin,dc=example,dc=com`
      - **Bind Credentials:** `adminpassword`
-   - Click **Test Connection** and **Test Authentication**. Ensure successful LDAP connection.
+   - Click **Test Connection** and **Test Authentication**.
    - Set **Users DN** to `ou=users,dc=example,dc=com` (modifiable as needed).
 7. Enable synchronization:
-   - In **Synchronization Settings**, enable **Import Users** and **Sync Registration** (to use OpenLDAP as a buffer for OMERO authentication).
+   - In **Synchronization Settings**, enable **Import Users** and **Sync Registration**.
    - Click **Save**.
 8. Test login via:
    ```
@@ -119,6 +119,8 @@ Follow the Auth0 documentation to configure authentication settings for OMERO.
    - Select **Vendor** as `Active Directory`.
 3. Save the configuration.
 
+_Additional configuration is required for full functionality for Keycloak and Auth0._
+
 ## References
 
 For more detailed information and troubleshooting, refer to the following resources:
@@ -128,3 +130,4 @@ For more detailed information and troubleshooting, refer to the following resour
 - [OMERO Deployments on GitLab](https://gitlab.in2p3.fr/fbi-data/websites/OmeroDeployments)
 - [Keycloak Setup](https://wehieduau.sharepoint.com/:w:/r/sites/StudentInternGroupatWEHI/_layouts/15/Doc.aspx?sourcedoc=%7B661B9E61-85EE-4E6C-B55C-2C2A5CC3A3C3%7D&file=Set%20up%20Keycloak%20on%20the%20Nectar%20VM.docx&action=default&mobileredirect=true)
 - [Keycloak, MariaDB, and OpenLDAP Guide](https://bamhm182.notion.site/Keycloak-Mariadb-and-OpenLDAP-d1587c81353c42e598526cae9c8f5efd)
+
