@@ -76,6 +76,8 @@ Follow the Auth0 documentation to configure authentication settings for OMERO.
      ```
    - Alternatively, copy the **Redirect URL** from **Keycloak Admin Dashboard > Identity Provider > Redirect URL**.
 6. Save the changes. Your Auth0 setup is now complete.
+7. Please refer to 
+   -[Auth0 Setup](https://wehieduau.sharepoint.com/:w:/r/sites/StudentInternGroupatWEHI/_layouts/15/Doc.aspx?sourcedoc=%7B0F5FB55E-3EED-4418-B4A9-A0C502F5FE94%7D&file=Auth0%20Okta%20Set%20Up.docx&action=default&mobileredirect=true)
 
 ### Step 5: Set Up Keycloak
 
@@ -109,7 +111,11 @@ Follow the Auth0 documentation to configure authentication settings for OMERO.
    ```
    https://[Ngrok_given_URL]/realms/MyRealm/account
    ```
-   _Note: There may be an issue with updating accounts; further debugging is needed._
+   _Note: There may be an issue with updating accounts; further mapping and config is needed._
+
+9. Please refer to
+- [Keycloak Fully Functioning Setup](https://wehieduau.sharepoint.com/:w:/r/sites/StudentInternGroupatWEHI/_layouts/15/Doc.aspx?sourcedoc=%7BE5E013C2-B59C-409F-8775-DC21E0F98F26%7D&file=KeyCloak%20Set%20Up.docx&action=default&mobileredirect=true)
+- [Possible Config Solution](https://auth0.com/blog/identity-in-spring-boot-with-kubernetes-keycloak-and-auth0/)
 
 ### Step 6: Set Up OpenLDAP
 
@@ -119,7 +125,7 @@ Follow the Auth0 documentation to configure authentication settings for OMERO.
    - Select **Vendor** as `Active Directory`.
 3. Save the configuration.
 
-_Additional configuration is required for full functionality for Keycloak and Auth0._
+_Additional configuration and testing is required for full functionality for Keycloak, Auth0, and OpenLDAP._
 
 ## References
 
