@@ -51,17 +51,17 @@ Ensure you have the following ports open:
 
 1. Pull the necessary Docker images:
     ```bash
-    sudo docker compose -f omero-compose.yml pull
+    sudo docker compose -f omero-compose.yaml pull
     ```
 
 2. Start the services in detached mode:
     ```bash
-    sudo docker compose -f omero-compose.yml up -d
+    sudo docker compose -f omero-compose.yaml up -d
     ```
 
 3. Optionally, monitor the service logs:
     ```bash
-    sudo docker compose -f omero-compose.yml logs -f
+    sudo docker compose -f omero-compose.yaml logs -f
     ```
 
 ---
