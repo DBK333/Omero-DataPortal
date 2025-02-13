@@ -31,10 +31,10 @@ Once you have created a user with suitable permissions, you can share links to s
    - Locate the specific Project, Dataset, or Image you want to share.
 
 2. **Copy the Link:**
-   - use the provided "Get Link" option.
-   
-   ![Get Link Option](https://github.com/DBK333/Omero-DataPortal/blob/main/InstructionImages/GetLinks.png)
+   - click at the icon.
    ![Get Link Option](https://github.com/DBK333/Omero-DataPortal/blob/main/InstructionImages/GetLinks2.png)
+   - Then copy the link.
+   ![Get Link Option](https://github.com/DBK333/Omero-DataPortal/blob/main/InstructionImages/GetLinks.png)
 
 ### How the Shared Link Works
 - When another user accesses the shared link, OMERO will prompt them for authentication.
