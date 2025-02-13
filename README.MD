@@ -95,13 +95,21 @@ Explore various OMERO image samples to get started:
 
 ---
 
-## OMERO Data Upload
+## OMERO Functions
 
 ### OMERO Data Upload
 
 Method on how to upload data into OMERO from your device:
 
 - [Omero Data Upload](https://github.com/DBK333/Omero-DataPortal/blob/main/DATAUPLOAD.MD)
+
+---
+
+### OMERO Access Controls
+
+Method on how to use Access Control with OMERO.web from your browser:
+
+- [Omero Access Control](https://github.com/DBK333/Omero-DataPortal/blob/main/DATAACCESS.MD)
 
 ---
 
