@@ -22,7 +22,7 @@ Ensure you have the following:
 
 ## Authentication Flow
 
-![Authentication Flow](authentication-flow.png)
+![Authentication Flow](https://github.com/DBK333/Omero-DataPortal/blob/main/InstructionImages/authentication-flow.png)
 
 ## Installation Steps
 
@@ -103,6 +103,9 @@ Follow the Auth0 documentation to configure authentication settings for OMERO.
      - **Bind DN:** `cn=admin,dc=example,dc=com` (modifiable as needed).
      - **Bind Credentials:** `adminpassword`
    - Click **Test Connection** and **Test Authentication**. (Should have connection success for both)
+
+   ![Get authentication](https://github.com/DBK333/Omero-DataPortal/blob/main/InstructionImages/SuccessLDAP.png)
+
    - Set **Edit Mode** to `WRITABLE`.
    - Set **Users DN** to `ou=users,dc=example,dc=com` (modifiable as needed).
 6. Enable synchronization:

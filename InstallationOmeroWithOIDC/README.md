@@ -46,7 +46,7 @@ Once the deployment is complete, OMERO and OIDC components should be running. Yo
 
 ## Authentication Flow
 
-![Authentication Flow](authentication-flow.png)
+![Get authentication](https://github.com/DBK333/Omero-DataPortal/blob/main/InstructionImages/NgrokAuthtoken.png)
 
 ### Accessing Keycloak
 
