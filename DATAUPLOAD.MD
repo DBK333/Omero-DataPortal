@@ -34,18 +34,24 @@ scp -i ~/Desktop/OmeroServer1.pem ~/Desktop/summarised_deconvolved_image_1.tif u
 ### Format:
 ```bash
 sudo docker cp **YOUR_FILE.tif** **YOUR_CONTAINER_NAME**:/tmp/**YOUR_FILE.tif**
+```
+- **YOUR_FILE.tif**: Your image file.
+- **YOUR_CONTAINER_NAME**: The OMERO server container name.
+
+After you done with the upload run this command
+```bash
 sudo docker exec -it **YOUR_CONTAINER_NAME** /bin/bash
 ```
 
-- **YOUR_FILE.tif**: Your image file.
-- **YOUR_CONTAINER_NAME**: The OMERO server container name.
+
 
 ### Example:
 ```bash
 sudo docker cp summarised_deskewed_image_1.tiff installationdockercompose-omeroserver-1:/tmp/summarised_deskewed_image_1.tiff
+```
+```bash
 sudo docker exec -it installationdockercompose-omeroserver-1 /bin/bash
 ```
-
 ---
 
 ## 3. Access the OMERO Container and Log In

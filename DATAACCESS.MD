@@ -32,8 +32,10 @@ Once you have created a user with suitable permissions, you can share links to s
 
 2. **Copy the Link:**
    - click at the icon.
+
    ![Get Link Option](https://github.com/DBK333/Omero-DataPortal/blob/main/InstructionImages/GetLinks2.png)
    - Then copy the link.
+   
    ![Get Link Option](https://github.com/DBK333/Omero-DataPortal/blob/main/InstructionImages/GetLinks3.png)
 
 ### How the Shared Link Works
