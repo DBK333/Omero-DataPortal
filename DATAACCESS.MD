@@ -34,7 +34,7 @@ Once you have created a user with suitable permissions, you can share links to s
    - click at the icon.
    ![Get Link Option](https://github.com/DBK333/Omero-DataPortal/blob/main/InstructionImages/GetLinks2.png)
    - Then copy the link.
-   ![Get Link Option](https://github.com/DBK333/Omero-DataPortal/blob/main/InstructionImages/GetLinks.png)
+   ![Get Link Option](https://github.com/DBK333/Omero-DataPortal/blob/main/InstructionImages/GetLinks3.png)
 
 ### How the Shared Link Works
 - When another user accesses the shared link, OMERO will prompt them for authentication.
