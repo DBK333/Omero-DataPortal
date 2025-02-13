@@ -41,6 +41,8 @@ cd Omero-DataPortal/InstallationOIDC/
 2. Navigate to **Getting Started > Your Auth Token**.
 3. Save the authentication token in the terminal:
 
+![Get authentication](https://github.com/DBK333/Omero-DataPortal/blob/main/InstructionImages/NgrokAuthtoken.png)
+
 ```bash
 echo "NGROK_AUTH_TOKEN=your_token_here" > .env
 ```
@@ -64,7 +66,11 @@ Follow the Auth0 documentation to configure authentication settings for OMERO.
 4. Create an application:
    - Navigate to **Applications > Create Application**.
    - Enter a name for your test application and select **Regular Web Applications**.
-5. Configure application settings:
+5. Find Ngrok Endpoint URL
+
+![Get endpoint](https://github.com/DBK333/Omero-DataPortal/blob/main/InstructionImages/NgrokEndpoint.png)
+
+6. Configure application settings:
    - Go to the **Application URIs** section.
    - Set **Allowed Callback URLs** to:
      ```

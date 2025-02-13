@@ -1,9 +1,3 @@
-Please refer to thei access control management with root with this https://omero.readthedocs.io/en/stable/sysadmins/server-permissions.html
-How to get link for Project and Data sets
-Getlink.png
-Getlink2.png
-After you create user with suitable access control you can go to the wanted Project or data set or a specific image to copy url link to other user which when use by other user it will ask for user authentication and after it sucess you will gain access to the sepecific data if you have the permission if you don't have the permission it will not show the data in the URL 
-
 # OMERO Access Control Management and Link Sharing
 
 ## Access Control Management with Root
@@ -35,7 +29,7 @@ Once you have created a user with suitable permissions, you can share links to s
 
    ![Get Link Option](https://github.com/DBK333/Omero-DataPortal/blob/main/InstructionImages/GetLinks2.png)
    - Then copy the link.
-   
+
    ![Get Link Option](https://github.com/DBK333/Omero-DataPortal/blob/main/InstructionImages/GetLinks3.png)
 
 ### How the Shared Link Works
