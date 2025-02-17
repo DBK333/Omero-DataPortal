@@ -23,6 +23,8 @@ This repository demonstrates a basic image processing workflow involving the fol
 
 This workflow serves as a foundational pipeline for more complex bioinformatics and image processing applications.
 
+## **The dataset for WEHI internships can be found here: https://zenodo.org/records/14807502.**
+
 ## **Repository Structure**
 
 - `main.py`: The main Python script that includes all steps for converting **CZI** files to **Zarr** format, preprocessing the images (deskew, deconvolve, downsample), and visualizing the processed images.
@@ -119,8 +121,6 @@ This will open the processed images in **napari**, where you can interactively e
 - **No configuration needed**: All settings are handled within `main.py`.
 
 ---
-
-## **The dataset for WEHI internships can be found here: https://zenodo.org/records/14807502.**
 
 ## **Reference**
 

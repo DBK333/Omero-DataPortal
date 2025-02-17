@@ -7,6 +7,7 @@ The OMERO with OIDC installation is still under development.
 ## Table of Contents
 
 - [Prerequisites](#prerequisites)
+  - [OMERO Image Samples](#omero-image-samples)
   - [Running Instance](#running-instance)
   - [Security](#security)
   - [Security Groups (For Cloud Users)](#security-groups-for-cloud-users)
@@ -16,7 +17,6 @@ The OMERO with OIDC installation is still under development.
   - [OMERO Installation with Kubernetes](#omero-installation-with-kubernetes)
   - [Installation with OIDC Components Only](#installation-with-oidc-components-only)
   - [OMERO Installation with OIDC](#omero-installation-with-oidc)
-  - [OMERO Image Samples](#omero-image-samples)
 - [OMERO Functions](#omero-functions)
   - [OMERO Data Upload](#omero-data-upload)
   - [OMERO Access Controls](#omero-access-controls)
@@ -27,6 +27,14 @@ The OMERO with OIDC installation is still under development.
 ---
 
 ## Prerequisites
+
+### OMERO Image Samples
+
+Explore various OMERO image samples to get started:
+
+- [Browse OMERO Samples](https://github.com/DBK333/Omero-DataPortal/tree/main/OmeroImageSamples)
+
+---
 
 ### Running Instance
 
@@ -88,12 +96,6 @@ Follow the [OIDC for Component Only Installation Guide](https://github.com/DBK33
 **Note:** You must install OMERO first before setting up OIDC.
 
 Follow the [OMERO with OIDC Installation Guide](https://github.com/DBK333/Omero-DataPortal/tree/main/InstallationOmeroWithOIDC) to integrate OpenID Connect authentication with the Omero Data Portal using Docker Compose.
-
-### OMERO Image Samples
-
-Explore various OMERO image samples to get started:
-
-- [Browse OMERO Samples](https://github.com/DBK333/Omero-DataPortal/tree/main/OmeroImageSamples)
 
 ---
 
